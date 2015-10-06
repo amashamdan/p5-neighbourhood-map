@@ -1,6 +1,7 @@
 var map;
 var infoWindowArray = [];
 var markerArray = [];
+var markersAndInfoWindows = [];
 function initMap() {
   	map = new google.maps.Map(document.getElementById('map'), {
 	    center: {lat: 47.605881, lng: -122.332047},
@@ -15,32 +16,34 @@ function initMap() {
   	});
 
   	initialLocations.forEach(function(item) {
-  		markerArray.push(new google.maps.Marker({
-  			map: map,
-  			position: item.position,
-  			title: item.name
-  		}));
-  		infoWindowArray.push(new google.maps.InfoWindow({
-  			content: '<h4 class="iwTitle">'+item.name+'</h4>'+
-  			'<span class="iwAddress">'+item.address+'</span>'+'<br>'+
-  			'<a class="iwUrl" href="'+item.url+'" target="blank">'+item.url+'</a>'+'<br>'+
-  			'<img class="iwImage" src='+item.image+'>'
-  		}));
+  		markersAndInfoWindows.push(
+  			{
+  				marker: new google.maps.Marker({
+  							map: map,
+  							place: {
+  								location: item.position,
+  								query: item.name
+  							},
+  							title: item.name
+  			}),
+  				infoWindow: new google.maps.InfoWindow({
+  					content: '<h4 class="iwTitle">'+item.name+'</h4>'+
+  					'<span class="iwAddress">'+item.address+'</span>'+'<br>'+
+  					'<a class="iwUrl" href="'+item.url+'" target="blank">'+item.url+'</a>'+'<br>'+
+  					'<img class="iwImage" src='+item.image+'>'
+  			}) 
+  			});
   	});
   	placeMarkers();
   	
 }
 
 function placeMarkers() {
-	var c = 0;
-  	markerArray.forEach(function(marker) {
-  		var infoWindow = infoWindowArray[c];
-  		marker.addListener('click', function() {
-  			infoWindow.open(map, marker);
-  		});
-  		c++;
-  		console.log(marker.title);
-  	});
+	markersAndInfoWindows.forEach(function(pair) {
+		pair.marker.addListener('click', function() {
+			pair.infoWindow.open(map, pair.marker);
+		})
+	})
 }
 
 var initialLocations = [
@@ -105,7 +108,12 @@ var ViewModel = function() {
 	}
 
 	this.iw = function() {
-		console.log(this.name);
+		var name = this.name;
+		markersAndInfoWindows.forEach(function(pair) {
+			if (name == pair.marker.title) {
+				pair.infoWindow.open(map, pair.marker);
+			}
+		})
 	}
 }
 
