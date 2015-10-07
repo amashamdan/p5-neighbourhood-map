@@ -46,10 +46,24 @@ body {
 
 .search-input {
 	height: 25px;
-	width: 350px;
 	margin: 5px;
 	padding: 0 5px 0 5px;
-	width: calc(100% - 70px);
+	width: calc(100% - 55px);
+}
+
+.form {
+	margin: 0;
+	padding: 0;
+	width: calc(100% - 60px);
+}
+
+.go {
+	border: 1px solid white;
+	height: 25px;
+	width: 30px;
+	margin: 5px;
+	background-color: #EF3E3E;
+	color: white;, 
 }
 
 .results-div {
@@ -107,8 +121,11 @@ body {
 }
 
 @media screen and (min-width: 550px) {
-	.search-input {
+	.form {
 		width: 100%;
+	}
+	.search-input {
+		width: calc(100% - 55px);
 	}
 	.results-div {
 		display: block !important;
