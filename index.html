@@ -11,7 +11,10 @@
 	<body>
 		<div class="search-div">
 			<button class="drawer" data-bind="click: resultsToggle">Results</button>
-			<input class="search-input" placeholder="Look for..." data-bind="event: {keyup: initiateSearch}">
+			<form class="form">
+				<input class="search-input" placeholder="Look for...">
+				<button class="go" type="submit" data-bind="click: initiateSearch">Go</button>
+			</form>
 		</div>
 		<div class="results-div">
 			<ul class="results-list" data-bind="foreach: searchResults">

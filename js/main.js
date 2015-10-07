@@ -47,7 +47,7 @@ function callback(results, status) {
 	liveSearch = [];
     if (status == google.maps.places.PlacesServiceStatus.OK) {
     	for (var i = 0; i < results.length; i++) {
-      		liveSearch.push(results[i]);
+      		liveSearch.push(new Location(results[i]));
     	}
   	} else {
   		alert("Search request failed");
@@ -63,10 +63,16 @@ function placeMarkers() {
 	})
 }
 
+var Location = function(data) {
+	this.name = ko.observable(data.name);
+	this.address = ko.observable(data.formatted_address);
+	this.placeId = ko.observable(data.place_id);
+	this.position = ko.observable(data.geometry.location);
+}
+
 var initialLocations = [
 	{
 		name: "Seattle Aquarium",
-		type: "Science",
 		address: "1483 Alaskan Way",
 		url: "http://www.seattleaquarium.org",
 		position: {lat: 47.607467, lng: -122.343013},
@@ -74,7 +80,6 @@ var initialLocations = [
 	},
 	{
 		name: "Harborview Medical Center",
-		type: "Hospital",
 		address: "325 9th Ave",
 		url:"http://uwmedicine.washington.edu",
 		position: {lat: 47.603517, lng: -122.323087},
@@ -82,7 +87,6 @@ var initialLocations = [
 	},
 	{
 		name: "Sky View Observatory",
-		type: "Tourism",
 		address: "701 5th Ave",
 		url: "http://www.skyviewobservatory.com",
 		position: {lat: 47.604590, lng: -122.330473},
@@ -90,7 +94,6 @@ var initialLocations = [
 	},
 	{
 		name: "Washington State Convention Center",
-		type: "Events",
 		address: "800 Convention Pl",
 		url: "http://www.wscc.com/",
 		position: {lat: 47.611482, lng: -122.332165},
@@ -98,7 +101,6 @@ var initialLocations = [
 	},
 	{
 		name: "Space Needle",
-		type: "Tourism",
 		address: "400 Broad St",
 		url: "http://www.spaceneedle.com/",
 		position: {lat: 47.620506, lng: -122.349256},
@@ -136,6 +138,16 @@ var ViewModel = function() {
 		})
 	};
 
+	this.hello = function() {
+		alert("ok");
+	}
+
+	window.searchDone = function() {
+		liveSearch.forEach(function(item) {
+			self.searchResults.push({name: item.name});
+		})
+	};
+
 	this.initiateSearch = function() {
 		self.searchResults([]);
 		if ($(".search-input").val()) {
@@ -148,13 +160,6 @@ var ViewModel = function() {
 			    query: $(".search-input").val()
 			};
 			service.textSearch(request, callback); 
-
-			window.searchDone = function() {
-				liveSearch.forEach(function(item) {
-					self.searchResults.push({name: item.name});
-				})
-			};
-
 		} else {
 			self.searchResults([]);
 		}
