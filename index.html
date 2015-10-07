@@ -11,7 +11,7 @@
 	<body>
 		<div class="search-div">
 			<button class="drawer" data-bind="click: resultsToggle">Results</button>
-			<input class="search-input" placeholder="Look for..."/>
+			<input class="search-input" placeholder="Look for..." data-bind="event: {keyup: initiateSearch}">
 		</div>
 		<div class="results-div">
 			<ul class="results-list" data-bind="foreach: searchResults">
@@ -22,7 +22,7 @@
 		<div id="map"></div>
 		<script src="js/lib/knockout-3.2.0.js"></script>
 		<script src="js/main.js"></script>
-		<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFgUKHT5M83YmAcue-nHgU-VpCjoeozsQ&callback=initMap&signed_in=true">
+		<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFgUKHT5M83YmAcue-nHgU-VpCjoeozsQ&callback=initMap&signed_in=true&libraries=places">
     	</script>
 	</body>
 </html>

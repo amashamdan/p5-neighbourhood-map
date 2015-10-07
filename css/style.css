@@ -70,15 +70,17 @@ body {
 	font-size: 13px;
 }
 
-.result-element:hover {
-	cursor: pointer;
-}
-
 .close-results {
 	width: 100%;
 	background-color: #EF3E3E;
 	color: white;
 	border: 1px solid white;
+}
+
+.close-results:hover, .result-element:hover, .drawer:hover {
+	cursor: pointer;
+	background-color: white;
+	color: #EF3E3E;
 }
 
 .iwTitle {

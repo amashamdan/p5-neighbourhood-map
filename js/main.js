@@ -1,10 +1,13 @@
 var map;
-var infoWindowArray = [];
-var markerArray = [];
 var markersAndInfoWindows = [];
+var service;
+var liveSearch = [];
+var baseLocation = {lat: 47.605881, lng: -122.332047};
+
 function initMap() {
+	
   	map = new google.maps.Map(document.getElementById('map'), {
-	    center: {lat: 47.605881, lng: -122.332047},
+	    center: baseLocation,
 	    zoom: 14,
 	    mapTypeId: google.maps.MapTypeId.HYBRID,
 	    scaleControl: true,
@@ -35,7 +38,21 @@ function initMap() {
   			});
   	});
   	placeMarkers();
-  	
+
+  	service = new google.maps.places.PlacesService(map);
+
+}
+
+function callback(results, status) {
+	liveSearch = [];
+    if (status == google.maps.places.PlacesServiceStatus.OK) {
+    	for (var i = 0; i < results.length; i++) {
+      		liveSearch.push(results[i]);
+    	}
+  	} else {
+  		alert("Search request failed");
+  	}
+  	searchDone();
 }
 
 function placeMarkers() {
@@ -51,7 +68,7 @@ var initialLocations = [
 		name: "Seattle Aquarium",
 		type: "Science",
 		address: "1483 Alaskan Way",
-		url: "www.seattleaquarium.org",
+		url: "http://www.seattleaquarium.org",
 		position: {lat: 47.607467, lng: -122.343013},
 		image: "images/aquarium.jpg"
 	},
@@ -59,7 +76,7 @@ var initialLocations = [
 		name: "Harborview Medical Center",
 		type: "Hospital",
 		address: "325 9th Ave",
-		url:"uwmedicine.washington.edu",
+		url:"http://uwmedicine.washington.edu",
 		position: {lat: 47.603517, lng: -122.323087},
 		image: "images/harborview.jpg"
 	},
@@ -67,7 +84,7 @@ var initialLocations = [
 		name: "Sky View Observatory",
 		type: "Tourism",
 		address: "701 5th Ave",
-		url: "www.skyviewobservatory.com",
+		url: "http://www.skyviewobservatory.com",
 		position: {lat: 47.604590, lng: -122.330473},
 		image: "images/skyview.jpg"
 	},
@@ -101,20 +118,48 @@ var ViewModel = function() {
 
 	this.resultsToggle = function() {
 		$(resultsDiv).fadeToggle();
-	}
+	};
 
 	this.resultsClose = function() {
 		$(resultsDiv).fadeOut();
-	}
+	};
 
 	this.iw = function() {
+		if ($(window).width() < 550) {
+			$(resultsDiv).fadeOut();
+		}
 		var name = this.name;
 		markersAndInfoWindows.forEach(function(pair) {
 			if (name == pair.marker.title) {
 				pair.infoWindow.open(map, pair.marker);
 			}
 		})
-	}
+	};
+
+	this.initiateSearch = function() {
+		self.searchResults([]);
+		if ($(".search-input").val()) {
+			if ($(window).width() < 550) {
+				$(resultsDiv).show();
+			}
+			var request = {
+			    location: baseLocation,
+			    radius: '5000',
+			    query: $(".search-input").val()
+			};
+			service.textSearch(request, callback); 
+
+			window.searchDone = function() {
+				liveSearch.forEach(function(item) {
+					self.searchResults.push({name: item.name});
+				})
+			};
+
+		} else {
+			self.searchResults([]);
+		}
+	};
 }
 
 ko.applyBindings(new ViewModel());
+
