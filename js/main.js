@@ -18,49 +18,40 @@ function initMap() {
 		}
   	});
 
+  	
   	window.placeMarkers = function() {
+  		var counter = 0;
   		liveSearch.forEach(function(item){
-  			markersAndInfoWindows.push(
-	  			{
-	  				marker: new google.maps.Marker({
-	  							map: map,
-	  							place: {
-	  								location: item.position(),
-	  								query: item.name()
-	  							},
-	  							title: item.name(),
-	  							animation: google.maps.Animation.DROP
-	  			}),
-	  				/*infoWindow: new google.maps.InfoWindow({
-	  					content: '<h4 class="iwTitle">'+item.name+'</h4>'+
-	  					'<span class="iwAddress">'+item.address+'</span>'+'<br>'+
-	  					'<a class="iwUrl" href="'+item.url+'" target="blank">'+item.url+'</a>'+'<br>'+
-	  					'<img class="iwImage" src='+item.image+'>'
-	  			}) */
-	  			});
-  		})
-  	}
+  			window.setTimeout(function() {
+	  			markersAndInfoWindows.push(
+		  			{
+		  				marker: new google.maps.Marker({
+		  							map: map,
+		  							place: {
+		  								location: item.position(),
+		  								query: item.name()
+		  							},
+		  							title: item.name(),
+		  							animation: google.maps.Animation.DROP
+		  			}),
+		  				infoWindow: new google.maps.InfoWindow({
+		  					content: '<div class="iwTitle">'+item.name()+'</div>'+
+		  					'<span class="iwAddress">'+item.address()+'</span>'+'<br>'
+		  			}) 
+		  			});
+	  			if (counter == liveSearch.length) {
+	  				createIW();
+	  			}
 
-  	initialLocations.forEach(function(item) {
-  		markersAndInfoWindows.push(
-  			{
-  				marker: new google.maps.Marker({
-  							map: map,
-  							place: {
-  								location: item.position,
-  								query: item.name
-  							},
-  							title: item.name
-  			}),
-  				infoWindow: new google.maps.InfoWindow({
-  					content: '<h4 class="iwTitle">'+item.name+'</h4>'+
-  					'<span class="iwAddress">'+item.address+'</span>'+'<br>'+
-  					'<a class="iwUrl" href="'+item.url+'" target="blank">'+item.url+'</a>'+'<br>'+
-  					'<img class="iwImage" src='+item.image+'>'
-  			}) 
-  			});
-  	});
-  	createIW();
+	  		}, counter*100);
+	  		counter++;
+  		});
+  		
+    }
+
+    google.maps.event.addListenerOnce(map, 'idle', function(){
+	    placeMarkers();
+	});
   	service = new google.maps.places.PlacesService(map);
 }
 
@@ -79,6 +70,10 @@ function callback(results, status) {
 function createIW() {
 	markersAndInfoWindows.forEach(function(pair) {
 		pair.marker.addListener('click', function() {
+			pair.marker.setAnimation(google.maps.Animation.BOUNCE);
+			setTimeout(function() {
+				pair.marker.setAnimation(null);
+			}, 1500)
 			pair.infoWindow.open(map, pair.marker);
 		})
 	})
@@ -94,38 +89,43 @@ var Location = function(data) {
 var initialLocations = [
 	{
 		name: "Seattle Aquarium",
-		address: "1483 Alaskan Way",
+		formatted_address: "1483 Alaskan Way, Seattle WA United States",
 		url: "http://www.seattleaquarium.org",
-		position: {lat: 47.607467, lng: -122.343013},
-		image: "images/aquarium.jpg"
+		geometry: {location: {lat: 47.607467, lng: -122.343013}},
+		image: "images/aquarium.jpg",
+		place_id: ""
 	},
 	{
 		name: "Harborview Medical Center",
-		address: "325 9th Ave",
+		formatted_address: "325 9th Ave, Seattle WA United States",
 		url:"http://uwmedicine.washington.edu",
-		position: {lat: 47.603517, lng: -122.323087},
-		image: "images/harborview.jpg"
+		geometry: {location: {lat: 47.603517, lng: -122.323087}},
+		image: "images/harborview.jpg",
+		place_id: ""
 	},
 	{
 		name: "Sky View Observatory",
-		address: "701 5th Ave",
+		formatted_address: "701 5th Ave, Seattle WA United States",
 		url: "http://www.skyviewobservatory.com",
-		position: {lat: 47.604590, lng: -122.330473},
-		image: "images/skyview.jpg"
+		geometry: {location: {lat: 47.604590, lng: -122.330473}},
+		image: "images/skyview.jpg",
+		place_id: ""
 	},
 	{
 		name: "Washington State Convention Center",
-		address: "800 Convention Pl",
+		formatted_address: "800 Convention Pl, Seattle WA United States",
 		url: "http://www.wscc.com/",
-		position: {lat: 47.611482, lng: -122.332165},
-		image: "images/wscc.jpg"
+		geometry: {location: {lat: 47.611482, lng: -122.332165}},
+		image: "images/wscc.jpg",
+		place_id: ""
 	},
 	{
 		name: "Space Needle",
-		address: "400 Broad St",
+		formatted_address: "400 Broad St, Seattle WA United States",
 		url: "http://www.spaceneedle.com/",
-		position: {lat: 47.620506, lng: -122.349256},
-		image: "images/spaceneedle.jpg"
+		geometry: {location: {lat: 47.620506, lng: -122.349256}},
+		image: "images/spaceneedle.jpg",
+		place_id: ""
 	},
 ];
 
@@ -144,6 +144,7 @@ var ViewModel = function() {
 
 	initialLocations.forEach(function(locationItem) {
 		self.searchResults.push(locationItem);
+		liveSearch.push(new Location(locationItem));
 	});
 
 	this.resultsToggle = function() {
@@ -161,6 +162,10 @@ var ViewModel = function() {
 		var name = this.name;
 		markersAndInfoWindows.forEach(function(pair) {
 			if (name == pair.marker.title) {
+				pair.marker.setAnimation(google.maps.Animation.BOUNCE);
+				setTimeout(function() {
+					pair.marker.setAnimation(null);
+				}, 1500)
 				pair.infoWindow.open(map, pair.marker);
 			}
 		})
@@ -168,8 +173,9 @@ var ViewModel = function() {
 
 	window.searchDone = function() {
 		liveSearch.forEach(function(item) {
-			self.searchResults.push({name: item.name});
+			self.searchResults.push({name: item.name()});
 		})
+		map.panTo(baseLocation);
 		placeMarkers();
 	};
 
@@ -184,7 +190,7 @@ var ViewModel = function() {
 			}
 			var request = {
 			    location: baseLocation,
-			    radius: '5000',
+			    radius: '2000',
 			    query: $(".search-input").val()
 			};
 			service.textSearch(request, callback); 
@@ -195,4 +201,3 @@ var ViewModel = function() {
 }
 
 ko.applyBindings(new ViewModel());
-
