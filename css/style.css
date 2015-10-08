@@ -100,6 +100,7 @@ body {
 }
 
 .iwTitle {
+	width: 100%;
 	text-align: center;
 	background-color: #EF3E3E;
 	color: white;
