@@ -75,6 +75,8 @@ body {
 	top: 35px;
 	left: 0;
 	z-index: 2;
+	height: 50%;
+	overflow-y: scroll;
 }
 
 .result-element {
@@ -131,6 +133,8 @@ body {
 		display: block !important;
 		width: 150px;
 		position: static;
+		height: 50%;
+		overflow-y: scroll;
 	}
 	#map {
 		position: static;
@@ -160,7 +164,8 @@ body {
 	.results-div {
 		display: block;
 		width: 250px;
-		height: calc(100% - 40px);
+		height: 50%;
+		overflow-y: scroll;
 	}
 	#map {
 		width: calc(100% - 250px);
