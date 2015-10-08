@@ -18,6 +18,29 @@ function initMap() {
 		}
   	});
 
+  	window.placeMarkers = function() {
+  		liveSearch.forEach(function(item){
+  			markersAndInfoWindows.push(
+	  			{
+	  				marker: new google.maps.Marker({
+	  							map: map,
+	  							place: {
+	  								location: item.position(),
+	  								query: item.name()
+	  							},
+	  							title: item.name(),
+	  							animation: google.maps.Animation.DROP
+	  			}),
+	  				/*infoWindow: new google.maps.InfoWindow({
+	  					content: '<h4 class="iwTitle">'+item.name+'</h4>'+
+	  					'<span class="iwAddress">'+item.address+'</span>'+'<br>'+
+	  					'<a class="iwUrl" href="'+item.url+'" target="blank">'+item.url+'</a>'+'<br>'+
+	  					'<img class="iwImage" src='+item.image+'>'
+	  			}) */
+	  			});
+  		})
+  	}
+
   	initialLocations.forEach(function(item) {
   		markersAndInfoWindows.push(
   			{
@@ -37,10 +60,8 @@ function initMap() {
   			}) 
   			});
   	});
-  	placeMarkers();
-
+  	createIW();
   	service = new google.maps.places.PlacesService(map);
-
 }
 
 function callback(results, status) {
@@ -55,7 +76,7 @@ function callback(results, status) {
   	searchDone();
 }
 
-function placeMarkers() {
+function createIW() {
 	markersAndInfoWindows.forEach(function(pair) {
 		pair.marker.addListener('click', function() {
 			pair.infoWindow.open(map, pair.marker);
@@ -108,6 +129,13 @@ var initialLocations = [
 	},
 ];
 
+function clearMarkers() {
+	markersAndInfoWindows.forEach(function(pair){
+		pair.marker.setMap(null);
+	});
+	markersAndInfoWindows = [];
+}
+
 var ViewModel = function() {
 	var self = this;
 	var resultsDiv = $(".results-div");
@@ -138,18 +166,18 @@ var ViewModel = function() {
 		})
 	};
 
-	this.hello = function() {
-		alert("ok");
-	}
-
 	window.searchDone = function() {
 		liveSearch.forEach(function(item) {
 			self.searchResults.push({name: item.name});
 		})
+		placeMarkers();
 	};
 
 	this.initiateSearch = function() {
 		self.searchResults([]);
+
+		clearMarkers();
+
 		if ($(".search-input").val()) {
 			if ($(window).width() < 550) {
 				$(resultsDiv).show();
