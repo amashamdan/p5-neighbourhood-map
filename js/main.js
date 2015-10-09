@@ -18,9 +18,11 @@ function initMap() {
 		}
   	});
 
-  	
   	window.placeMarkers = function() {
   		var counter = 0;
+  		var image = {
+  			url: 'images/spa.png'
+  		}
   		liveSearch.forEach(function(item){
   			window.setTimeout(function() {
 	  			markersAndInfoWindows.push(
@@ -32,11 +34,11 @@ function initMap() {
 		  								query: item.name()
 		  							},
 		  							title: item.name(),
-		  							animation: google.maps.Animation.DROP
+		  							animation: google.maps.Animation.DROP,
+		  							icon: markerIcons[item.types()]
 		  			}),
 		  				infoWindow: new google.maps.InfoWindow({
-		  					content: '<div class="iwTitle">'+item.name()+'</div>'+
-		  					'<span class="iwAddress">'+item.address()+'</span>'+'<br>'
+		  					content: " "
 		  			}) 
 		  			});
 	  			if (counter == liveSearch.length) {
@@ -67,9 +69,41 @@ function callback(results, status) {
   	searchDone();
 }
 
+function details(place, status) {
+	if (status == google.maps.places.PlacesServiceStatus.OK) {
+		markersAndInfoWindows.forEach(function(pair){
+			if (place.name == pair.marker.title) {
+				setIwContent(pair.infoWindow, place);
+			}
+		})
+	}
+}
+
+function setIwContent(infoWindow, place) {
+	if (place.photos){
+		imageUrl = place.photos[0].getUrl({'maxWidth': 125});
+	} else {
+		imageUrl = 'images/noPhoto.jpg';
+	}
+	
+	infoWindow.setContent('<h4 class="iwTitle">'+place.name+'</h4>'+
+		  				  '<span class="iwAddress">Address: '+place.address_components[0].short_name+
+		  				  ' '+place.address_components[1].short_name+'</span>'+'<br>'+
+		  				  '<span class="iwPhone">Phone: '+place.formatted_phone_number+'</span>'+'<br>'+
+		  				  '<a target="blank" class="iwGoogle" href='+place.url+'>Click for Google+ page</a>'+'<br>'+
+		  				  '<span class="iwRating">Rating: '+place.rating+'</span>'+'<br>'+
+		  				  '<img class="iwImage" src='+imageUrl+'>')
+}
+
 function createIW() {
 	markersAndInfoWindows.forEach(function(pair) {
 		pair.marker.addListener('click', function() {
+			liveSearch.forEach(function(item) {
+
+				if (item.name() == pair.marker.title) {
+					service.getDetails({placeId: item.placeId()}, details);
+				}
+			})
 			pair.marker.setAnimation(google.maps.Animation.BOUNCE);
 			setTimeout(function() {
 				pair.marker.setAnimation(null);
@@ -84,6 +118,7 @@ var Location = function(data) {
 	this.address = ko.observable(data.formatted_address);
 	this.placeId = ko.observable(data.place_id);
 	this.position = ko.observable(data.geometry.location);
+	this.types = ko.observable(data.types[0]);
 }
 
 var initialLocations = [
@@ -93,7 +128,8 @@ var initialLocations = [
 		url: "http://www.seattleaquarium.org",
 		geometry: {location: {lat: 47.607467, lng: -122.343013}},
 		image: "images/aquarium.jpg",
-		place_id: ""
+		place_id: "ChIJ06-9aLJqkFQRsRXmsyawZbk",
+		types: ["aquarium"]
 	},
 	{
 		name: "Harborview Medical Center",
@@ -101,7 +137,8 @@ var initialLocations = [
 		url:"http://uwmedicine.washington.edu",
 		geometry: {location: {lat: 47.603517, lng: -122.323087}},
 		image: "images/harborview.jpg",
-		place_id: ""
+		place_id: "ChIJsaW7rLlqkFQRdge3Wex61mc",
+		types: ["establishment"]
 	},
 	{
 		name: "Sky View Observatory",
@@ -109,7 +146,8 @@ var initialLocations = [
 		url: "http://www.skyviewobservatory.com",
 		geometry: {location: {lat: 47.604590, lng: -122.330473}},
 		image: "images/skyview.jpg",
-		place_id: ""
+		place_id: "ChIJi-OPx7BqkFQR9TDCUWqViHc",
+		types: ["establishment"]
 	},
 	{
 		name: "Washington State Convention Center",
@@ -117,7 +155,8 @@ var initialLocations = [
 		url: "http://www.wscc.com/",
 		geometry: {location: {lat: 47.611482, lng: -122.332165}},
 		image: "images/wscc.jpg",
-		place_id: ""
+		place_id: "ChIJxzwPCbVqkFQRabwmIXYs0zg",
+		types: ["establishment"]
 	},
 	{
 		name: "Space Needle",
@@ -125,7 +164,8 @@ var initialLocations = [
 		url: "http://www.spaceneedle.com/",
 		geometry: {location: {lat: 47.620506, lng: -122.349256}},
 		image: "images/spaceneedle.jpg",
-		place_id: ""
+		place_id: "ChIJ-bfVTh8VkFQRDZLQnmioK9s",
+		types: ["establishment"]
 	},
 ];
 
@@ -160,6 +200,13 @@ var ViewModel = function() {
 			$(resultsDiv).fadeOut();
 		}
 		var name = this.name;
+
+		liveSearch.forEach(function(item) {
+			if (item.name() == name) {
+				service.getDetails({placeId: item.placeId()}, details);
+			}
+		})
+
 		markersAndInfoWindows.forEach(function(pair) {
 			if (name == pair.marker.title) {
 				pair.marker.setAnimation(google.maps.Animation.BOUNCE);
