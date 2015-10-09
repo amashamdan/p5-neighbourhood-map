@@ -1,3 +1,4 @@
+var bounds;
 var map;
 var markersAndInfoWindows = [];
 var service;
@@ -5,7 +6,7 @@ var liveSearch = [];
 var baseLocation = {lat: 47.605881, lng: -122.332047};
 
 function initMap() {
-	
+	bounds = new google.maps.LatLngBounds();
   	map = new google.maps.Map(document.getElementById('map'), {
 	    center: baseLocation,
 	    zoom: 14,
@@ -58,14 +59,17 @@ function initMap() {
 }
 
 function callback(results, status) {
+	bounds = new google.maps.LatLngBounds();
 	liveSearch = [];
     if (status == google.maps.places.PlacesServiceStatus.OK) {
     	for (var i = 0; i < results.length; i++) {
       		liveSearch.push(new Location(results[i]));
+      		bounds.extend(results[i].geometry.location);
     	}
   	} else {
   		alert("Search request failed");
   	}
+  	map.fitBounds(bounds);
   	searchDone();
 }
 
@@ -237,7 +241,7 @@ var ViewModel = function() {
 			}
 			var request = {
 			    location: baseLocation,
-			    radius: '2000',
+			    radius: '1000',
 			    query: $(".search-input").val()
 			};
 			service.textSearch(request, callback); 
