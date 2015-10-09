@@ -93,14 +93,15 @@ body {
 	border: 1px solid white;
 }
 
-.close-results:hover, .result-element:hover, .drawer:hover {
+.close-results:hover, .result-element:hover, .drawer:hover, .go:hover {
 	cursor: pointer;
 	background-color: white;
 	color: #EF3E3E;
 }
 
 .iwTitle {
-	width: 100%;
+	border: 1px solid red;
+	width: 200px;
 	text-align: center;
 	background-color: #EF3E3E;
 	color: white;
@@ -110,17 +111,19 @@ body {
 	margin: 5px 0 5px 0;
 }
 
-.iwAddress {
+.iwAddress, .iwPhone, .iwRating {
 	font-size: 13px;
 }
 
-.iwUrl {
+.iwGoogle {
 	font-size: 13px;
 	color: #EF3E3E;
 }
 
 .iwImage {
 	margin-top: 5px;
+	position: relative;
+	left: 37.5px;
 }
 
 @media screen and (min-width: 550px) {
