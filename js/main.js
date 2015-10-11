@@ -21,9 +21,6 @@ function initMap() {
 
   	window.placeMarkers = function() {
   		var counter = 0;
-  		var image = {
-  			url: 'images/spa.png'
-  		}
   		liveSearch.forEach(function(item){
   			window.setTimeout(function() {
 	  			markersAndInfoWindows.push(
@@ -56,6 +53,39 @@ function initMap() {
 	    placeMarkers();
 	});
   	service = new google.maps.places.PlacesService(map);
+
+  	var defaultBounds = new google.maps.LatLngBounds(
+		new google.maps.LatLng(-33.8902, 151.1759),
+		new google.maps.LatLng(-33.8474, 151.2631));
+
+	var input = document.getElementById('search-input');
+	var input = document.getElementById('city');
+
+	var searchBox = new google.maps.places.SearchBox(input, {
+	  bounds: defaultBounds
+	});
+
+	var citySearchBox = new google.maps.places.SearchBox(input, {
+	  bounds: defaultBounds
+	});
+
+	document.getElementById('city-search').addEventListener("submit", function(event) {
+	  	event.preventDefault();
+		var geocoder = new google.maps.Geocoder();
+		codeAddress(geocoder, map);
+	});
+}
+
+function codeAddress(geocoder, map) {
+    var address = document.getElementById("city").value;
+    geocoder.geocode( { 'address': address}, function(results, status) {
+	    if (status == google.maps.GeocoderStatus.OK) {
+	      	map.setCenter(results[0].geometry.location);
+	      	baseLocation = results[0].geometry.location;
+	    } else {
+	      	alert("Geocode was not successful for the following reason: " + status);
+    	}
+  	});
 }
 
 function callback(results, status) {
@@ -108,6 +138,7 @@ function createIW() {
 					service.getDetails({placeId: item.placeId()}, details);
 				}
 			})
+			map.panTo(pair.marker.place.location);
 			pair.marker.setAnimation(google.maps.Animation.BOUNCE);
 			setTimeout(function() {
 				pair.marker.setAnimation(null);
@@ -217,6 +248,7 @@ var ViewModel = function() {
 				setTimeout(function() {
 					pair.marker.setAnimation(null);
 				}, 1500)
+				map.panTo(pair.marker.place.location);
 				pair.infoWindow.open(map, pair.marker);
 			}
 		})
@@ -235,14 +267,14 @@ var ViewModel = function() {
 
 		clearMarkers();
 
-		if ($(".search-input").val()) {
+		if ($("#search-input").val()) {
 			if ($(window).width() < 550) {
 				$(resultsDiv).show();
 			}
 			var request = {
 			    location: baseLocation,
 			    radius: '1000',
-			    query: $(".search-input").val()
+			    query: $("#search-input").val()
 			};
 			service.textSearch(request, callback); 
 		} else {

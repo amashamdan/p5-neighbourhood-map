@@ -17,7 +17,7 @@ body {
 
 #map {
 	width: 100%;
-	height: calc(100% - 35px);
+	height: calc(100% - 70px);
 }
 
 .container {
@@ -34,7 +34,7 @@ body {
 	flex-wrap: wrap;
 }
 
-.drawer {
+.drawer, .weather {
 	height: 25px;
 	margin: 5px;
 	width: 50px;
@@ -44,14 +44,14 @@ body {
 	border: 1px solid white;
 }
 
-.search-input {
+#search-input, #city {
 	height: 25px;
 	margin: 5px;
 	padding: 0 5px 0 5px;
 	width: calc(100% - 55px);
 }
 
-.form {
+.form, #city-search {
 	margin: 0;
 	padding: 0;
 	width: calc(100% - 60px);
@@ -126,6 +126,15 @@ body {
 	left: 37.5px;
 }
 
+.credits {
+	background-color: white;
+	color: #EF3E3E;
+	position: fixed;
+	font-size: 11px;
+	top: calc(100% - 26px);
+	right:45px;
+}
+
 @media screen and (min-width: 550px) {
 	.form {
 		width: 100%;
@@ -173,7 +182,7 @@ body {
 	}
 	#map {
 		width: calc(100% - 250px);
-		height: calc(100% - 40px);
+		height: calc(100% - 80px);
 	}
 }
 
