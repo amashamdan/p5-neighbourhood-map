@@ -2,7 +2,6 @@ var bounds;
 var map;
 var markersAndInfoWindows = [];
 var service;
-var liveSearch = [];
 var baseLocation = {lat: 47.605881, lng: -122.332047};
 
 function initMap() {
@@ -21,7 +20,7 @@ function initMap() {
 
   	window.placeMarkers = function() {
   		var counter = 0;
-  		liveSearch.forEach(function(item){
+  		searchResults().forEach(function(item){
   			window.setTimeout(function() {
 	  			markersAndInfoWindows.push(
 		  			{
@@ -39,7 +38,7 @@ function initMap() {
 		  					content: " "
 		  			}) 
 		  			});
-	  			if (counter == liveSearch.length) {
+	  			if (counter == searchResults().length) {
 	  				createIW();
 	  			}
 
@@ -90,10 +89,13 @@ function codeAddress(geocoder, map) {
 
 function callback(results, status) {
 	bounds = new google.maps.LatLngBounds();
-	liveSearch = [];
+	while (searchResults().length > 0) {
+		searchResults().pop();
+	}
+
     if (status == google.maps.places.PlacesServiceStatus.OK) {
     	for (var i = 0; i < results.length; i++) {
-      		liveSearch.push(new Location(results[i]));
+      		searchResults.push(new Location(results[i]));
       		bounds.extend(results[i].geometry.location);
     	}
   	} else {
@@ -132,16 +134,13 @@ function setIwContent(infoWindow, place) {
 function createIW() {
 	markersAndInfoWindows.forEach(function(pair) {
 		pair.marker.addListener('click', function() {
-			liveSearch.forEach(function(item) {
+			searchResults().forEach(function(item) {
 				if (item.name() == pair.marker.title) {
 					service.getDetails({placeId: item.placeId()}, details);
 				}
 			})
-			//var belowCenter = pair.marker.place.location;
-			//console.log(belowCenter.lat()-0.02);
-			//belowCenter.lat = belowCenter.lat - 0.02;
-			//console.log(belowCenter.lat());
-			map.panTo({lat: pair.marker.place.location.lat()+0.01, lng: pair.marker.place.location.lng()});
+			map.panTo({lat: pair.marker.place.location.lat()+0.01, 
+					  lng: pair.marker.place.location.lng()});
 			pair.marker.setAnimation(google.maps.Animation.BOUNCE);
 			setTimeout(function() {
 				pair.marker.setAnimation(null);
@@ -218,11 +217,10 @@ var ViewModel = function() {
 	var self = this;
 	var resultsDiv = $(".results-div");
 
-	this.searchResults = ko.observableArray([]);
+	window.searchResults = ko.observableArray([]);
 
 	initialLocations.forEach(function(locationItem) {
-		self.searchResults.push(locationItem);
-		liveSearch.push(new Location(locationItem));
+		searchResults.push(new Location(locationItem));
 	});
 
 	this.resultsToggle = function() {
@@ -237,9 +235,9 @@ var ViewModel = function() {
 		if ($(window).width() < 550) {
 			$(resultsDiv).fadeOut();
 		}
-		var name = this.name;
+		var name = this.name();
 
-		liveSearch.forEach(function(item) {
+		searchResults().forEach(function(item) {
 			if (item.name() == name) {
 				service.getDetails({placeId: item.placeId()}, details);
 			}
@@ -251,22 +249,19 @@ var ViewModel = function() {
 				setTimeout(function() {
 					pair.marker.setAnimation(null);
 				}, 1500)
-				map.panTo(pair.marker.place.location);
+				map.panTo({lat: pair.marker.place.location.lat()+0.01,
+						  lng: pair.marker.place.location.lng()});
 				pair.infoWindow.open(map, pair.marker);
 			}
 		})
 	};
 
 	window.searchDone = function() {
-		liveSearch.forEach(function(item) {
-			self.searchResults.push({name: item.name()});
-		})
 		map.panTo(baseLocation);
 		placeMarkers();
 	};
 
 	this.initiateSearch = function() {
-		self.searchResults([]);
 
 		clearMarkers();
 
@@ -281,7 +276,8 @@ var ViewModel = function() {
 			};
 			service.textSearch(request, callback); 
 		} else {
-			self.searchResults([]);
+			searchResults([]);
+			alert("Nothing is entered");
 		}
 	};
 }
