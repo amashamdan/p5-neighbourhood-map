@@ -59,13 +59,13 @@ function initMap() {
 		new google.maps.LatLng(-33.8474, 151.2631));
 
 	var input = document.getElementById('search-input');
-	var input = document.getElementById('city');
+	var cityInput = document.getElementById('city');
 
 	var searchBox = new google.maps.places.SearchBox(input, {
 	  bounds: defaultBounds
 	});
 
-	var citySearchBox = new google.maps.places.SearchBox(input, {
+	var citySearchBox = new google.maps.places.SearchBox(cityInput, {
 	  bounds: defaultBounds
 	});
 
@@ -133,12 +133,15 @@ function createIW() {
 	markersAndInfoWindows.forEach(function(pair) {
 		pair.marker.addListener('click', function() {
 			liveSearch.forEach(function(item) {
-
 				if (item.name() == pair.marker.title) {
 					service.getDetails({placeId: item.placeId()}, details);
 				}
 			})
-			map.panTo(pair.marker.place.location);
+			//var belowCenter = pair.marker.place.location;
+			//console.log(belowCenter.lat()-0.02);
+			//belowCenter.lat = belowCenter.lat - 0.02;
+			//console.log(belowCenter.lat());
+			map.panTo({lat: pair.marker.place.location.lat()+0.01, lng: pair.marker.place.location.lng()});
 			pair.marker.setAnimation(google.maps.Animation.BOUNCE);
 			setTimeout(function() {
 				pair.marker.setAnimation(null);
