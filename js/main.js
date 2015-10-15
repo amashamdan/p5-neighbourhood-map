@@ -3,6 +3,7 @@ var map;
 var markersAndInfoWindows = [];
 var service;
 var baseLocation = {lat: 47.605881, lng: -122.332047};
+var populationCounter = 0;
 
 function initMap() {
 	bounds = new google.maps.LatLngBounds();
@@ -49,8 +50,16 @@ function initMap() {
     }
 
     google.maps.event.addListenerOnce(map, 'idle', function(){
-	    placeMarkers();
+    		initialLocations.forEach(function(item) {
+				var request = {
+				    location: baseLocation,
+				    radius: '1000',
+				    query: item
+				};
+				service.textSearch(request, initialCallback); 
+			});
 	});
+
   	service = new google.maps.places.PlacesService(map);
 
   	var defaultBounds = new google.maps.LatLngBounds(
@@ -93,7 +102,6 @@ function codeAddress(geocoder, map) {
 
 function callback(results, status) {
 	bounds = new google.maps.LatLngBounds();
-	searchResults([]);
     if (status == google.maps.places.PlacesServiceStatus.OK) {
     	for (var i = 0; i < results.length; i++) {
       		searchResults.push(new Location(results[i]));
@@ -103,12 +111,25 @@ function callback(results, status) {
   		if (status == 'ZERO_RESULTS') {
   			$(".no-results").show();
   		} else {
-  			alert("Search request failed" + status);
+  			alert("Search request failed " + status);
   		}
   	}
   	map.fitBounds(bounds);
   	map.panTo(baseLocation);
 	placeMarkers();
+}
+
+function initialCallback(results, status) {
+    if (status == google.maps.places.PlacesServiceStatus.OK) {
+  		searchResults.push(new Location(results[0]));
+  		bounds.extend(results[0].geometry.location);
+  	} else {
+  		alert("Search request failed " + status);
+  	}
+	populationCounter++;
+	if (populationCounter == 5) {	
+		placeMarkers();
+	}
 }
 
 function details(place, status) {
@@ -164,53 +185,9 @@ var Location = function(data) {
 	this.types = ko.observable(data.types[0]);
 }
 
-var initialLocations = [
-	{
-		name: "Seattle Aquarium",
-		formatted_address: "1483 Alaskan Way, Seattle WA United States",
-		url: "http://www.seattleaquarium.org",
-		geometry: {location: {lat: 47.607467, lng: -122.343013}},
-		image: "images/aquarium.jpg",
-		place_id: "ChIJ06-9aLJqkFQRsRXmsyawZbk",
-		types: ["aquarium"]
-	},
-	{
-		name: "Harborview Medical Center",
-		formatted_address: "325 9th Ave, Seattle WA United States",
-		url:"http://uwmedicine.washington.edu",
-		geometry: {location: {lat: 47.603517, lng: -122.323087}},
-		image: "images/harborview.jpg",
-		place_id: "ChIJsaW7rLlqkFQRdge3Wex61mc",
-		types: ["establishment"]
-	},
-	{
-		name: "Sky View Observatory",
-		formatted_address: "701 5th Ave, Seattle WA United States",
-		url: "http://www.skyviewobservatory.com",
-		geometry: {location: {lat: 47.604590, lng: -122.330473}},
-		image: "images/skyview.jpg",
-		place_id: "ChIJi-OPx7BqkFQR9TDCUWqViHc",
-		types: ["establishment"]
-	},
-	{
-		name: "Washington State Convention Center",
-		formatted_address: "800 Convention Pl, Seattle WA United States",
-		url: "http://www.wscc.com/",
-		geometry: {location: {lat: 47.611482, lng: -122.332165}},
-		image: "images/wscc.jpg",
-		place_id: "ChIJxzwPCbVqkFQRabwmIXYs0zg",
-		types: ["establishment"]
-	},
-	{
-		name: "Space Needle",
-		formatted_address: "400 Broad St, Seattle WA United States",
-		url: "http://www.spaceneedle.com/",
-		geometry: {location: {lat: 47.620506, lng: -122.349256}},
-		image: "images/spaceneedle.jpg",
-		place_id: "ChIJ-bfVTh8VkFQRDZLQnmioK9s",
-		types: ["establishment"]
-	},
-];
+var initialLocations = ["Seattle Aquarium", "Harborview Medical Center",
+						"Sky View Observatory", "Washington State Convention Center",
+						"Space Needle"];
 
 function clearMarkers() {
 	markersAndInfoWindows.forEach(function(pair){
@@ -224,10 +201,6 @@ var ViewModel = function() {
 	var resultsDiv = $(".results-div");
 
 	window.searchResults = ko.observableArray([]);
-
-	initialLocations.forEach(function(locationItem) {
-		searchResults.push(new Location(locationItem));
-	});
 
 	this.resultsToggle = function() {
 		$(resultsDiv).fadeToggle();
@@ -267,11 +240,13 @@ var ViewModel = function() {
 		clearMarkers();
 		$(".new-city").hide();
 		$(".no-results").hide();
+		searchResults([]);
 
 		if ($("#search-input").val()) {
 			if ($(window).width() < 550) {
 				$(resultsDiv).show();
 			}
+
 			var request = {
 			    location: baseLocation,
 			    radius: '1000',
@@ -279,7 +254,6 @@ var ViewModel = function() {
 			};
 			service.textSearch(request, callback); 
 		} else {
-			searchResults([]);
 			alert("Nothing is entered");
 		}
 	};
