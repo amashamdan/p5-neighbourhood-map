@@ -72,6 +72,10 @@ function initMap() {
 	  	event.preventDefault();
 		var geocoder = new google.maps.Geocoder();
 		codeAddress(geocoder, map);
+		searchResults([]);
+		$("#search-input").val('');
+		$("#search-input").attr('placeholder', 'Search for places in the new city!');
+		$(".new-city").show();
 	});
 }
 
@@ -89,20 +93,22 @@ function codeAddress(geocoder, map) {
 
 function callback(results, status) {
 	bounds = new google.maps.LatLngBounds();
-	while (searchResults().length > 0) {
-		searchResults().pop();
-	}
-
+	searchResults([]);
     if (status == google.maps.places.PlacesServiceStatus.OK) {
     	for (var i = 0; i < results.length; i++) {
       		searchResults.push(new Location(results[i]));
       		bounds.extend(results[i].geometry.location);
     	}
   	} else {
-  		alert("Search request failed");
+  		if (status == 'ZERO_RESULTS') {
+  			$(".no-results").show();
+  		} else {
+  			alert("Search request failed" + status);
+  		}
   	}
   	map.fitBounds(bounds);
-  	searchDone();
+  	map.panTo(baseLocation);
+	placeMarkers();
 }
 
 function details(place, status) {
@@ -256,14 +262,11 @@ var ViewModel = function() {
 		})
 	};
 
-	window.searchDone = function() {
-		map.panTo(baseLocation);
-		placeMarkers();
-	};
-
 	this.initiateSearch = function() {
 
 		clearMarkers();
+		$(".new-city").hide();
+		$(".no-results").hide();
 
 		if ($("#search-input").val()) {
 			if ($(window).width() < 550) {

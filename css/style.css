@@ -72,7 +72,7 @@ body {
 	padding: 5px;
 	display: none;
 	position: fixed;
-	top: 35px;
+	top: 70px;
 	left: 0;
 	z-index: 2;
 	height: 50%;
@@ -101,7 +101,7 @@ body {
 
 .iwTitle {
 	border: 1px solid red;
-	width: 200px;
+	width: 180px;
 	text-align: center;
 	background-color: #EF3E3E;
 	color: white;
@@ -123,7 +123,8 @@ body {
 .iwImage {
 	margin-top: 5px;
 	position: relative;
-	left: 37.5px;
+	left: 50px;
+	width:80px;
 }
 
 .credits {
@@ -133,6 +134,12 @@ body {
 	font-size: 11px;
 	top: calc(100% - 26px);
 	right:45px;
+}
+
+.no-results, .new-city {
+	color: white;
+	font-size: 13px;
+	display: none;
 }
 
 @media screen and (min-width: 550px) {
@@ -162,7 +169,10 @@ body {
 	.iwTitle, .iwAddress, .iwUrl {
 		font-size: 14px;
 	}
-}
+	.iwImage {
+		width: 100px;
+		left: 40px;
+	}
 
 @media screen and (min-width: 800px) {
 	* {
@@ -183,6 +193,10 @@ body {
 	#map {
 		width: calc(100% - 250px);
 		height: calc(100% - 80px);
+	}
+	.iwImage {
+		width: 110px;
+		left: 35px;
 	}
 }
 
