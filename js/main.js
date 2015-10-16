@@ -50,6 +50,7 @@ function initMap() {
     }
 
     google.maps.event.addListenerOnce(map, 'idle', function(){
+    	if (!localStorage.searchResults) {
     		initialLocations.forEach(function(item) {
 				var request = {
 				    location: baseLocation,
@@ -58,6 +59,15 @@ function initMap() {
 				};
 				service.textSearch(request, initialCallback); 
 			});
+		} else {
+			var temp = JSON.parse(localStorage.searchResults);
+			var tempPosition = JSON.parse(localStorage.positionArray);
+			for (var i = 0; i < temp.length; i++) {
+				searchResults.push(new Location(temp[i]));
+				searchResults()[i].position(tempPosition[i]);
+			}
+			placeMarkers();
+		}
 	});
 
   	service = new google.maps.places.PlacesService(map);
@@ -101,10 +111,13 @@ function codeAddress(geocoder, map) {
 }
 
 function callback(results, status) {
+	var positionArray = [];
 	bounds = new google.maps.LatLngBounds();
     if (status == google.maps.places.PlacesServiceStatus.OK) {
     	for (var i = 0; i < results.length; i++) {
       		searchResults.push(new Location(results[i]));
+      		positionArray.push({lat: results[i].geometry.location.lat(),
+      					   lng: results[i].geometry.location.lng()});
       		bounds.extend(results[i].geometry.location);
     	}
   	} else {
@@ -117,6 +130,9 @@ function callback(results, status) {
   	map.fitBounds(bounds);
   	map.panTo(baseLocation);
 	placeMarkers();
+	localStorage.searchResults = JSON.stringify(results);
+	localStorage.positionArray = JSON.stringify(positionArray);
+	//console.log(latArray)
 }
 
 function initialCallback(results, status) {
