@@ -90,7 +90,7 @@ function initMap() {
 			placeMarkers();
 			cityMarker(localStorage.lastCity, lastPosition);
 		}
-
+		weather(47.605881, -122.332047);
 	});   	
 
   	service = new google.maps.places.PlacesService(map);
@@ -136,6 +136,9 @@ function codeAddress(geocoder, map, condition, searchBox, citySearchBox) {
 	      		searchBox.setBounds(map.getBounds());
 	      		citySearchBox.setBounds(map.getBounds());
 	      		clearMarkers();
+	      		var latitude = results[0].geometry.location.lat();
+	      		var longitude = results[0].geometry.location.lng();
+	      		weather(latitude, longitude);
 	      	}
 	      	baseLocation = results[0].geometry.location;
 	      	cityMarker(results[0].address_components[0].long_name, baseLocation);
@@ -263,10 +266,13 @@ function clearMarkers() {
 var ViewModel = function() {
 	var self = this;
 	var resultsDiv = $(".results-div");
+	var weatherDetails = $(".weather-details");
 
 	window.searchResults = ko.observableArray([]);
+	window.weatherArray = ko.observableArray([]);
 
 	this.resultsToggle = function() {
+		$(weatherDetails).hide();
 		$(resultsDiv).fadeToggle();
 	};
 
@@ -325,6 +331,40 @@ var ViewModel = function() {
 		localStorage.clear();
 		initMap();
 	};
+
+	this.weatherToggle = function() {
+		$('.results-div').hide();
+		$('.weather-details').fadeToggle();
+	}
+
+	this.weatherClose = function() {
+		$('.weather-details').fadeToggle();
+	}
+}
+
+function weather(lat, lng) {
+	weatherArray([]);
+	$.ajax({
+		url : "http://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lng+"&appid=3b226624aed979fa47deafd7a85e8a1d",
+	    success : function(parsed_json) {
+		    var location = parsed_json.name;
+		    var temp = Math.round(parsed_json.main.temp - 273);
+		    var humidity = Math.round(parsed_json.main.humidity);
+		    var condition = parsed_json.weather[0].description;
+		    var clouds = parsed_json.clouds.all;
+		    var wind = parsed_json.wind.speed;
+		    var icon = parsed_json.weather[0].icon;
+		    var iconUrl = "weather_images/"+icon+".png"
+		    
+		    weatherArray.push({name: location, 
+		    				   temperature: temp,
+		    				   condition: condition,
+		    				   clouds: clouds,
+		    				   humidity: humidity,
+		    				   wind: wind,
+		    				   image: iconUrl});
+		}
+	})
 }
 
 ko.applyBindings(new ViewModel());

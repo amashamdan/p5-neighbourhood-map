@@ -10,7 +10,18 @@
 	</head>
 	<body>
 		<div class="search-div">
-			<button class="weather">Weather</button>
+			<button class="weather" data-bind="click: weatherToggle">Weather</button>
+			<div class="weather-details" data-bind="foreach: weatherArray">
+				<img class="weather-icon" src="" alt="Weather icon" data-bind="attr: {src: image}">
+				<p class="weather-entry">Temperature in <span class="weather-entry" data-bind="text: name"> </span> is <span class="weather-entry" data-bind="text: temperature"></span> &degC</p>
+				<p class="weather-entry">Contdition: <span class="weather-entry" data-bind="text: condition"></span></p>
+				<p class="weather-entry">Clouds: <span class="weather-entry" data-bind="text: clouds"></span>%</p>
+				<p class="weather-entry">Humidity: <span class="weather-entry" data-bind="text: humidity"></span>%</p>
+				<p class="weather-entry">Wind speed: <span class="weather-entry" data-bind="text: wind"></span> m/s</p>
+				<button class="close-weather" data-bind="click: $parent.weatherClose">Close weather</button>
+				<a class="weather-credits" href="http://openweathermap.org/api" target="blank">Weather provided by OpenWeatherMap</a>
+				<a class="weather-credits" href="http://findicons.com/pack/2607/tick_weather_icons" target="blank">Weather icons provided by FindIcons</a>
+			</div>
 			<form id="city-search">
 				<input id="city" placeholder="Change the city...">
 				<button class="go" type="submit">Go</button>
