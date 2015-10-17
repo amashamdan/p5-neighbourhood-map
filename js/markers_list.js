@@ -36,7 +36,7 @@ var markerIcons = {
 	finance: 'images/bank.png',
 	fire_station: 'images/fire_station.png',
 	florist: 'images/generic.png',
-	food: 'images.bakery.png',
+	food: 'images/bakery.png',
 	funeral_home: 'images/generic.png',
 	furniture_store: 'images/generic.png',
 	gas_station: 'images/gas_station.png',

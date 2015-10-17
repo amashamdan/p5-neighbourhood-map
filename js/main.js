@@ -2,11 +2,14 @@ var bounds;
 var map;
 var markersAndInfoWindows = [];
 var service;
-var baseLocation = {lat: 47.605881, lng: -122.332047};
+var baseLocation;
 var populationCounter = 0;
 
 function initMap() {
 	bounds = new google.maps.LatLngBounds();
+	if (!localStorage.searchResults) {
+		baseLocation = {lat: 47.605881, lng: -122.332047};
+	}
   	map = new google.maps.Map(document.getElementById('map'), {
 	    center: baseLocation,
 	    zoom: 14,
@@ -72,7 +75,7 @@ function initMap() {
 			var tempBounds = JSON.parse(localStorage.lastBounds);
 			var sw = new google.maps.LatLng(tempBounds.Pa.I, tempBounds.La.j);
 			var ne = new google.maps.LatLng(tempBounds.Pa.j, tempBounds.La.I);
-
+			var zoom = Number(localStorage.lastZoom);
 			var bounds = new google.maps.LatLngBounds();
 			var lastCity = localStorage.lastCity;
 			var lastPositionLat = localStorage.lastLat;
@@ -80,8 +83,10 @@ function initMap() {
 			bounds.extend(sw);
 			bounds.extend(ne);
 			map.fitBounds(bounds);
+			map.setZoom(zoom);
 			lastPosition = {lat: Number(lastPositionLat),
 							lng: Number(lastPositionLng)};
+			baseLocation = lastPosition;
 			placeMarkers();
 			cityMarker(localStorage.lastCity, lastPosition);
 		}
@@ -174,6 +179,7 @@ function callback(results, status) {
 	localStorage.searchResults = JSON.stringify(results);
 	localStorage.positionArray = JSON.stringify(positionArray);
 	localStorage.lastBounds = JSON.stringify(map.getBounds());
+	localStorage.lastZoom = map.getZoom();
 }
 
 function initialCallback(results, status) {
