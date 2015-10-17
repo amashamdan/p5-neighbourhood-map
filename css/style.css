@@ -142,6 +142,19 @@ body {
 	display: none;
 }
 
+.reset {
+	position: fixed;
+	padding: 6.5px;
+	top: 80px;
+	left: 100px;
+	z-index: 2;
+	font-size: 13px;
+	font-weight: bold;
+	background-color: white;
+	color: #EF3E3E;
+	border: none;
+}
+
 @media screen and (min-width: 550px) {
 	.form {
 		width: 100%;
@@ -173,6 +186,9 @@ body {
 		width: 100px;
 		left: 40px;
 	}
+	.reset {
+		left: 250px;
+	}
 
 @media screen and (min-width: 800px) {
 	* {
@@ -197,6 +213,10 @@ body {
 	.iwImage {
 		width: 110px;
 		left: 35px;
+	}
+	.reset {
+		left: 350px;
+		top: 90px;
 	}
 }
 

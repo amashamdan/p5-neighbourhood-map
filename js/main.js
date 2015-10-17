@@ -318,6 +318,13 @@ var ViewModel = function() {
 			alert("Nothing is entered");
 		}
 	};
+
+	this.reset = function() {
+		populationCounter = 0;
+		searchResults([]);
+		localStorage.clear();
+		initMap();
+	};
 }
 
 ko.applyBindings(new ViewModel());
