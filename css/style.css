@@ -171,7 +171,7 @@ body {
 	display: none;
 	background-color: #EF3E3E;
 	color: white;
-	border: 1px solid #EF3E3E;
+	border: 1px solid white;
 	padding: 15px;
 	z-index: 2;
 }
@@ -240,6 +240,9 @@ body {
 	.reset {
 		left: 250px;
 	}
+	.weather-details {
+		z-index: 5;
+	}
 
 @media screen and (min-width: 800px) {
 	* {
@@ -268,6 +271,9 @@ body {
 	.reset {
 		left: 350px;
 		top: 90px;
+	}
+	.weather-details {
+		z-index: 5;
 	}
 }
 
