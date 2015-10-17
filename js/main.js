@@ -65,6 +65,7 @@ function initMap() {
 				service.textSearch(request, initialCallback); 
 			});
 			codeAddress(geocoder, map, true);
+			weather(47.605881, -122.332047);
 		} else {
 			var temp = JSON.parse(localStorage.searchResults);
 			var tempPosition = JSON.parse(localStorage.positionArray);
@@ -89,8 +90,8 @@ function initMap() {
 			baseLocation = lastPosition;
 			placeMarkers();
 			cityMarker(localStorage.lastCity, lastPosition);
+			weather(Number(lastPositionLat), Number(lastPositionLng));
 		}
-		weather(47.605881, -122.332047);
 	});   	
 
   	service = new google.maps.places.PlacesService(map);
