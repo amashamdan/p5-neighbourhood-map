@@ -68,19 +68,18 @@ function initMap() {
 			for (var i = 0; i < temp.length; i++) {
 				searchResults.push(new Location(temp[i]));
 				searchResults()[i].position(tempPosition[i]);
-				console.log(searchResults()[i].position())
 			}
-			//var tempBounds = JSON.parse(localStorage.lastBounds);
-			//var sw = new google.maps.LatLng(tempBounds.Pa.I, tempBounds.La.j);
-			//var ne = new google.maps.LatLng(tempBounds.Pa.j, tempBounds.La.I);
+			var tempBounds = JSON.parse(localStorage.lastBounds);
+			var sw = new google.maps.LatLng(tempBounds.Pa.I, tempBounds.La.j);
+			var ne = new google.maps.LatLng(tempBounds.Pa.j, tempBounds.La.I);
 
-			//var bounds = new google.maps.LatLngBounds();
+			var bounds = new google.maps.LatLngBounds();
 			var lastCity = localStorage.lastCity;
 			var lastPositionLat = localStorage.lastLat;
 			var lastPositionLng = localStorage.lastLng;
-			//bounds.extend(sw);
-			//bounds.extend(ne);
-			//map.fitBounds(bounds);
+			bounds.extend(sw);
+			bounds.extend(ne);
+			map.fitBounds(bounds);
 			lastPosition = {lat: Number(lastPositionLat),
 							lng: Number(lastPositionLng)};
 			placeMarkers();
@@ -174,7 +173,7 @@ function callback(results, status) {
 	placeMarkers();
 	localStorage.searchResults = JSON.stringify(results);
 	localStorage.positionArray = JSON.stringify(positionArray);
-	//localStorage.lastBounds = JSON.stringify(map.getBounds());
+	localStorage.lastBounds = JSON.stringify(map.getBounds());
 }
 
 function initialCallback(results, status) {
