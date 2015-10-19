@@ -66,6 +66,7 @@ function initMap() {
 			});
 			codeAddress(geocoder, map, true);
 			weather(47.605881, -122.332047);
+			times("Seattle WA");
 		} else {
 			var temp = JSON.parse(localStorage.searchResults);
 			var tempPosition = JSON.parse(localStorage.positionArray);
@@ -91,6 +92,7 @@ function initMap() {
 			placeMarkers();
 			cityMarker(localStorage.lastCity, lastPosition);
 			weather(Number(lastPositionLat), Number(lastPositionLng));
+			times(lastCity);
 		}
 	});   	
 
@@ -140,6 +142,7 @@ function codeAddress(geocoder, map, condition, searchBox, citySearchBox) {
 	      		var latitude = results[0].geometry.location.lat();
 	      		var longitude = results[0].geometry.location.lng();
 	      		weather(latitude, longitude);
+	      		times(address);
 	      	}
 	      	baseLocation = results[0].geometry.location;
 	      	cityMarker(results[0].address_components[0].long_name, baseLocation);
@@ -266,24 +269,25 @@ function clearMarkers() {
 
 var ViewModel = function() {
 	var self = this;
-	var resultsDiv = $(".results-div");
+	var resultsWikiDiv = $(".results-wiki-div");
 	var weatherDetails = $(".weather-details");
 
 	window.searchResults = ko.observableArray([]);
+	window.newsResults = ko.observableArray([]);
 	window.weatherArray = ko.observableArray([]);
 
 	this.resultsToggle = function() {
 		$(weatherDetails).hide();
-		$(resultsDiv).fadeToggle();
+		$(resultsWikiDiv).fadeToggle();
 	};
 
 	this.resultsClose = function() {
-		$(resultsDiv).fadeOut();
+		$(resultsWikiDiv).fadeOut();
 	};
 
 	this.iw = function() {
 		if ($(window).width() < 550) {
-			$(resultsDiv).fadeOut();
+			$(resultsWikiDiv).fadeOut();
 		}
 		var name = this.name();
 
@@ -334,7 +338,7 @@ var ViewModel = function() {
 	};
 
 	this.weatherToggle = function() {
-		$('.results-div').hide();
+		$(resultsWikiDiv).hide();
 		$('.weather-details').fadeToggle();
 	}
 
@@ -365,6 +369,19 @@ function weather(lat, lng) {
 		    				   wind: wind,
 		    				   image: iconUrl});
 		}
+	})
+}
+
+function times(city) {
+	newsResults([]);
+	$.ajax({
+		url : "http://api.nytimes.com/svc/search/v2/articlesearch.json?q="+city+"&api-key=2bc73c1c7c519ec64cc7f2873b9e8744:16:72970449",
+	    success : function(parsed_json) {
+	    	parsed_json.response.docs.forEach(function(item) {
+	    		newsResults.push({headline: item.headline.main,
+	    						  url: item.web_url});
+	    	})
+	    }
 	})
 }
 

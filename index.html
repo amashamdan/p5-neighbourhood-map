@@ -34,14 +34,24 @@
 				<button class="go" type="submit" data-bind="click: initiateSearch">Go</button>
 			</form>
 		</div>
-		<div class="results-div">
-			<span class="no-results">No results, please use the search bar to 
-				find new places.</span>
-			<span class="new-city">Please use the search bar to look for places
-				in the new city</span>
-			<ul class="results-list" data-bind="foreach: searchResults">
-				<li class="result-element" data-bind="text: name, click: $parent.iw"></li>
-			</ul>
+		<div class="results-wiki-div">
+			<div class="results">
+				<h6 class="results-header">Search results</h6>
+				<span class="no-results">No results, please use the search bar to 
+					find new places.</span>
+				<span class="new-city">Please use the search bar to look for places in the new city</span>
+				<ul class="results-list" data-bind="foreach: searchResults">
+					<li class="result-element" data-bind="text: name, click: $parent.iw"></li>
+				</ul>
+			</div>
+			<div class="wiki">
+				<h6 class="results-header">NYTimes results</h6>
+				<div class="scroll">
+					<ul class="results-list" data-bind="foreach: newsResults">
+						<li class="result-element"><a class="news-link" href='' target="blank" data-bind="attr: {href: url}"><span class="news-headline" data-bind="text: headline"></span></a></li>
+					</ul>
+				</div>
+			</div>
 			<button class="close-results" data-bind="click: resultsClose">Close list</button>
 		</div>
 		<button class="reset" data-bind="click: reset">Reset map</button>

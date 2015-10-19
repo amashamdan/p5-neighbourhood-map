@@ -66,7 +66,7 @@ body {
 	color: white;, 
 }
 
-.results-div {
+.results-wiki-div {
 	background-color: #EF3E3E;
 	width: 200px;
 	padding: 5px;
@@ -75,7 +75,11 @@ body {
 	top: 70px;
 	left: 0;
 	z-index: 2;
-	height: 50%;
+	height: calc(100% - 70px);
+}
+
+.results, .wiki {
+	height: calc(50% - 12px);
 	overflow-y: scroll;
 }
 
@@ -83,6 +87,15 @@ body {
 	color: white;
 	border-bottom: 1px solid white;
 	padding: 5px 0 5px 5px;
+	font-size: 13px;
+}
+
+.news-link {
+	text-decoration: none;
+	color: white;
+}
+
+.news-headline {
 	font-size: 13px;
 }
 
@@ -100,7 +113,7 @@ body {
 	cursor: pointer;
 } 
 
-.result-element:hover, .drawer:hover, .go:hover, .weather:hover {
+.result-element:hover, .drawer:hover, .go:hover, .weather:hover, .news-link:hover {
 	cursor: pointer;
 	background-color: white;
 	color: #EF3E3E;
@@ -206,6 +219,14 @@ body {
 	color: white;
 }
 
+.results-header {
+	background-color: white;
+	color: #EF3E3E;
+	font-size: 14px;
+	padding: 2.5px;
+	border: 1px solid #EF3E3E;
+}
+
 @media screen and (min-width: 550px) {
 	.form {
 		width: 100%;
@@ -213,12 +234,11 @@ body {
 	.search-input {
 		width: calc(100% - 55px);
 	}
-	.results-div {
+	.results-wiki-div {
 		display: block !important;
 		width: 150px;
 		position: static;
-		height: 50%;
-		overflow-y: scroll;
+		height: calc(100% - 70px);
 	}
 	#map {
 		position: static;
@@ -229,6 +249,10 @@ body {
 	}
 	.close-results {
 		display: none;
+	}
+	.results, .wiki {
+		height: 50%;
+		overflow-y: scroll;
 	}
 	.iwTitle, .iwAddress, .iwUrl {
 		font-size: 14px;
@@ -254,9 +278,12 @@ body {
 	.search-input {
 		height: 30px;
 	}
-	.results-div {
+	.results-wiki-div {
 		display: block;
 		width: 250px;
+		max-height: calc(100% - 80px);
+	}
+	.results, .wiki {
 		height: 50%;
 		overflow-y: scroll;
 	}
