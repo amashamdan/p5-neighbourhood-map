@@ -75,8 +75,8 @@ function initMap() {
 				searchResults()[i].position(tempPosition[i]);
 			}
 			var tempBounds = JSON.parse(localStorage.lastBounds);
-			var sw = new google.maps.LatLng(tempBounds.Pa.I, tempBounds.La.j);
-			var ne = new google.maps.LatLng(tempBounds.Pa.j, tempBounds.La.I);
+			var sw = new google.maps.LatLng(tempBounds.O.O, tempBounds.j.j);
+			var ne = new google.maps.LatLng(tempBounds.O.j, tempBounds.j.O);
 			var zoom = Number(localStorage.lastZoom);
 			var bounds = new google.maps.LatLngBounds();
 			var lastCity = localStorage.lastCity;
