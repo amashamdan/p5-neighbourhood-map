@@ -36,8 +36,8 @@
 		</div>
 		<div class="results-wiki-div">
 			<h6 class="results-header">Search results</h6>
+			<input class="filter" placeholder="Filter results" data-bind="event: {keyup: filter}">
 			<div class="results">
-				
 				<span class="no-results">No results, please use the search bar to find new places.</span>
 				<span class="new-city">Please use the search bar to look for places in the new city</span>
 				<ul class="results-list" data-bind="foreach: searchResults">
@@ -46,7 +46,6 @@
 			</div>
 			<h6 class="results-header">NYTimes results</h6>
 			<div class="wiki">
-				
 				<div class="scroll">
 					<ul class="results-list" data-bind="foreach: newsResults">
 						<li class="result-element"><a class="news-link" href='' target="blank" data-bind="attr: {href: url}"><span class="news-headline" data-bind="text: headline"></span></a></li>
