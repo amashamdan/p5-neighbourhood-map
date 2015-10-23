@@ -79,7 +79,7 @@ body {
 }
 
 .results, .wiki {
-	height: calc(50% - 12px);
+	height: calc(50% - 38px);
 	overflow-y: scroll;
 }
 
@@ -166,7 +166,7 @@ body {
 	position: fixed;
 	padding: 6.5px;
 	top: 80px;
-	left: 100px;
+	left: 120px;
 	z-index: 1;
 	font-size: 13px;
 	font-weight: bold;
@@ -251,7 +251,7 @@ body {
 		display: none;
 	}
 	.results, .wiki {
-		height: 50%;
+		height: calc(50% - 23px);
 		overflow-y: scroll;
 	}
 	.iwTitle, .iwAddress, .iwUrl {
@@ -284,7 +284,7 @@ body {
 		max-height: calc(100% - 80px);
 	}
 	.results, .wiki {
-		height: 50%;
+		height: calc(50% - 22px);
 		overflow-y: scroll;
 	}
 	#map {
