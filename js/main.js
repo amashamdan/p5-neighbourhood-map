@@ -197,7 +197,7 @@ function initialCallback(results, status) {
   		alert("Search request failed " + status);
   	}
 	populationCounter++;
-	if (populationCounter == 5) {	
+	if (populationCounter == 10) {	
 		placeMarkers();
 	}
 }
@@ -258,7 +258,8 @@ var Location = function(data) {
 
 var initialLocations = ["Seattle Aquarium", "Harborview Medical Center",
 						"Sky View Observatory", "Washington State Convention Center",
-						"Space Needle"];
+						"Space Needle", "Cinerama", "Cal Anderson Park Fountain",
+						"Seattle Center", "Westlake Center", "Pike Place Fish Market"]
 
 function clearMarkers() {
 	markersAndInfoWindows.forEach(function(pair){
@@ -335,6 +336,9 @@ var ViewModel = function() {
 		searchResults([]);
 		localStorage.clear();
 		initMap();
+		$("#city").val('');
+		$("#search-input").val('');
+		$("#search-input").attr('placeholder', 'Find new places...');
 	};
 
 	this.weatherToggle = function() {
@@ -344,6 +348,14 @@ var ViewModel = function() {
 
 	this.weatherClose = function() {
 		$('.weather-details').fadeToggle();
+	}
+
+	this.filter = function() {
+		if ($(".filter").val()) {
+			console.log("there's Value");
+		} else {
+			// show all results
+		}
 	}
 }
 
