@@ -140,6 +140,7 @@ function loadData() {
 
 function codeAddress(geocoder, map, condition, searchBox, citySearchBox) {
     var address;
+    tempArray = [];
     if (condition) {
     	address = "Seattle";
     } else {
@@ -373,6 +374,7 @@ var ViewModel = function() {
 		$("#city").val('');
 		$("#search-input").val('');
 		$(".filter").val('');
+		$(".new-city").hide();
 	};
 
 	this.weatherToggle = function() {
