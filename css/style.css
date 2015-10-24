@@ -79,8 +79,15 @@ body {
 }
 
 .results, .wiki {
-	height: calc(50% - 12px);
+	height: calc(50% - 50px);
 	overflow-y: scroll;
+}
+
+.filter {
+	width: 100%;
+	margin: 2px 0 2px 0;
+	font-size: 12px;
+	padding: 2.5px;
 }
 
 .result-element {
@@ -166,7 +173,7 @@ body {
 	position: fixed;
 	padding: 6.5px;
 	top: 80px;
-	left: 100px;
+	left: 120px;
 	z-index: 1;
 	font-size: 13px;
 	font-weight: bold;
@@ -220,8 +227,8 @@ body {
 }
 
 .results-header {
-	background-color: white;
-	color: #EF3E3E;
+	background-color: #246868;
+	color: white;
 	font-size: 14px;
 	padding: 2.5px;
 	border: 1px solid #EF3E3E;
@@ -251,7 +258,7 @@ body {
 		display: none;
 	}
 	.results, .wiki {
-		height: 50%;
+		height: calc(50% - 36px);
 		overflow-y: scroll;
 	}
 	.iwTitle, .iwAddress, .iwUrl {
@@ -284,7 +291,7 @@ body {
 		max-height: calc(100% - 80px);
 	}
 	.results, .wiki {
-		height: 50%;
+		height: calc(50% - 36px);
 		overflow-y: scroll;
 	}
 	#map {

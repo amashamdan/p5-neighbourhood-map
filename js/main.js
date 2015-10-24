@@ -4,6 +4,8 @@ var markersAndInfoWindows = [];
 var service;
 var baseLocation;
 var populationCounter = 0;
+var tempArray = [];
+var positionArray = [];
 
 function initMap() {
 	bounds = new google.maps.LatLngBounds();
@@ -22,8 +24,11 @@ function initMap() {
 		}
   	});
 
-  	window.placeMarkers = function() {
+  	window.placeMarkers = function(effectState) {
   		var counter = 0;
+  		var timeDelay = [0, 100];
+  		var effect = [google.maps.Animation.NONE, google.maps.Animation.DROP]
+
   		searchResults().forEach(function(item){
   			window.setTimeout(function() {
 	  			markersAndInfoWindows.push(
@@ -35,7 +40,7 @@ function initMap() {
 		  								query: item.name()
 		  							},
 		  							title: item.name(),
-		  							animation: google.maps.Animation.DROP,
+		  							animation: effect[effectState],
 		  							icon: markerIcons[item.types()]
 		  			}),
 		  				infoWindow: new google.maps.InfoWindow({
@@ -46,7 +51,7 @@ function initMap() {
 	  				createIW();
 	  			}
 
-	  		}, counter*100);
+	  		}, counter*timeDelay[effectState]);
 	  		counter++;
   		});
   		
@@ -68,31 +73,7 @@ function initMap() {
 			weather(47.605881, -122.332047);
 			times("Seattle WA");
 		} else {
-			var temp = JSON.parse(localStorage.searchResults);
-			var tempPosition = JSON.parse(localStorage.positionArray);
-			for (var i = 0; i < temp.length; i++) {
-				searchResults.push(new Location(temp[i]));
-				searchResults()[i].position(tempPosition[i]);
-			}
-			var tempBounds = JSON.parse(localStorage.lastBounds);
-			var sw = new google.maps.LatLng(tempBounds.Pa.I, tempBounds.La.j);
-			var ne = new google.maps.LatLng(tempBounds.Pa.j, tempBounds.La.I);
-			var zoom = Number(localStorage.lastZoom);
-			var bounds = new google.maps.LatLngBounds();
-			var lastCity = localStorage.lastCity;
-			var lastPositionLat = localStorage.lastLat;
-			var lastPositionLng = localStorage.lastLng;
-			bounds.extend(sw);
-			bounds.extend(ne);
-			map.fitBounds(bounds);
-			map.setZoom(zoom);
-			lastPosition = {lat: Number(lastPositionLat),
-							lng: Number(lastPositionLng)};
-			baseLocation = lastPosition;
-			placeMarkers();
-			cityMarker(localStorage.lastCity, lastPosition);
-			weather(Number(lastPositionLat), Number(lastPositionLng));
-			times(lastCity);
+			loadData();
 		}
 	});   	
 
@@ -124,6 +105,39 @@ function initMap() {
 	});
 }
 
+function loadData() {
+	var temp = JSON.parse(localStorage.searchResults);
+	var tempPosition = JSON.parse(localStorage.positionArray);
+	for (var i = 0; i < temp.length; i++) {
+		searchResults.push(new Location(temp[i]));
+		searchResults()[i].position(tempPosition[i]);
+		tempArray.push(new Location(temp[i]));
+		tempArray[i].position(tempPosition[i]);
+	}
+	var tempBounds = JSON.parse(localStorage.lastBounds);
+	var sw = new google.maps.LatLng(tempBounds.O.O, tempBounds.j.j);
+	var ne = new google.maps.LatLng(tempBounds.O.j, tempBounds.j.O);
+	var zoom = Number(localStorage.lastZoom);
+	var bounds = new google.maps.LatLngBounds();
+	var lastCity = localStorage.lastCity;
+	var lastPositionLat = localStorage.lastLat;
+	var lastPositionLng = localStorage.lastLng;
+	var lastFilter = localStorage.filter;
+	bounds.extend(sw);
+	bounds.extend(ne);
+	map.fitBounds(bounds);
+	map.setZoom(zoom);
+	lastPosition = {lat: Number(lastPositionLat),
+					lng: Number(lastPositionLng)};
+	baseLocation = lastPosition;
+	$(".filter").val(lastFilter);
+	filter();
+	placeMarkers(1);
+	cityMarker(localStorage.lastCity, lastPosition);
+	weather(Number(lastPositionLat), Number(lastPositionLng));
+	times(lastCity);
+}
+
 function codeAddress(geocoder, map, condition, searchBox, citySearchBox) {
     var address;
     if (condition) {
@@ -143,6 +157,7 @@ function codeAddress(geocoder, map, condition, searchBox, citySearchBox) {
 	      		var longitude = results[0].geometry.location.lng();
 	      		weather(latitude, longitude);
 	      		times(address);
+	      		$(".filter").val('');
 	      	}
 	      	baseLocation = results[0].geometry.location;
 	      	cityMarker(results[0].address_components[0].long_name, baseLocation);
@@ -165,11 +180,12 @@ function cityMarker(city, position) {
 }
 
 function callback(results, status) {
-	var positionArray = [];
+	tempArray = [];
 	bounds = new google.maps.LatLngBounds();
     if (status == google.maps.places.PlacesServiceStatus.OK) {
     	for (var i = 0; i < results.length; i++) {
       		searchResults.push(new Location(results[i]));
+      		tempArray.push(new Location(results[i]));
       		positionArray.push({lat: results[i].geometry.location.lat(),
       					   lng: results[i].geometry.location.lng()});
       		bounds.extend(results[i].geometry.location);
@@ -182,23 +198,39 @@ function callback(results, status) {
   		}
   	}
   	map.fitBounds(bounds);
-	placeMarkers();
-	localStorage.searchResults = JSON.stringify(results);
-	localStorage.positionArray = JSON.stringify(positionArray);
-	localStorage.lastBounds = JSON.stringify(map.getBounds());
-	localStorage.lastZoom = map.getZoom();
+	placeMarkers(1);
+	saveData(results, "", 1);
+}
+
+function saveData(results, filter, selection) {
+	if (selection) {
+		localStorage.searchResults = JSON.stringify(results);
+		localStorage.tempArray = JSON.stringify(results);
+		localStorage.positionArray = JSON.stringify(positionArray);
+		localStorage.lastBounds = JSON.stringify(map.getBounds());
+		localStorage.lastZoom = map.getZoom();
+	} else {
+		localStorage.filter = filter;
+	}
 }
 
 function initialCallback(results, status) {
     if (status == google.maps.places.PlacesServiceStatus.OK) {
   		searchResults.push(new Location(results[0]));
+  		tempArray.push(new Location(results[0]));
   		bounds.extend(results[0].geometry.location);
   	} else {
   		alert("Search request failed " + status);
   	}
 	populationCounter++;
-	if (populationCounter == 5) {	
-		placeMarkers();
+	
+	if (populationCounter == 10) {
+		if (localStorage.filter) {
+			$(".filter").val(localStorage.filter);
+			filter();
+		} else {	//the function filter has a call to filter.
+			placeMarkers(1);
+		}
 	}
 }
 
@@ -258,7 +290,8 @@ var Location = function(data) {
 
 var initialLocations = ["Seattle Aquarium", "Harborview Medical Center",
 						"Sky View Observatory", "Washington State Convention Center",
-						"Space Needle"];
+						"Space Needle", "Cinerama", "Cal Anderson Park Fountain",
+						"Seattle Center", "Westlake Center", "Pike Place Fish Market"]
 
 function clearMarkers() {
 	markersAndInfoWindows.forEach(function(pair){
@@ -314,6 +347,7 @@ var ViewModel = function() {
 	this.initiateSearch = function() {
 
 		clearMarkers();
+		$(".filter").val('');
 		$(".new-city").hide();
 		$(".no-results").hide();
 		searchResults([]);
@@ -333,8 +367,12 @@ var ViewModel = function() {
 	this.reset = function() {
 		populationCounter = 0;
 		searchResults([]);
+		tempArray = [];
 		localStorage.clear();
 		initMap();
+		$("#city").val('');
+		$("#search-input").val('');
+		$(".filter").val('');
 	};
 
 	this.weatherToggle = function() {
@@ -344,6 +382,30 @@ var ViewModel = function() {
 
 	this.weatherClose = function() {
 		$('.weather-details').fadeToggle();
+	}
+
+	window.filter = function() {
+		var filter = $(".filter").val().toLowerCase();
+		if (filter) {
+			clearMarkers();
+			searchResults([]);
+			//console.log(tempArray);
+			tempArray.forEach(function(item) {
+				if (item.name().toLowerCase().search(filter) > -1) {
+					searchResults.push(item);
+				}
+			})
+			saveData("", filter, 0);
+			placeMarkers(0);
+		} else {
+			clearMarkers();
+			searchResults([]);
+			localStorage.filter = '';
+			tempArray.forEach(function(item) {
+				searchResults.push(item);
+			});
+			placeMarkers(0);
+		}
 	}
 }
 
