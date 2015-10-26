@@ -9,6 +9,7 @@ var positionArray = [];
 
 function initMap() {
 	bounds = new google.maps.LatLngBounds();
+	$('.results-error').hide();
 	if (!localStorage.searchResults) {
 		baseLocation = {lat: 47.605881, lng: -122.332047};
 	}
@@ -141,6 +142,7 @@ function loadData() {
 function codeAddress(geocoder, map, condition, searchBox, citySearchBox) {
     var address;
     tempArray = [];
+    $('.results-error').hide();
     if (condition) {
     	address = "Seattle";
     } else {
@@ -184,6 +186,7 @@ function callback(results, status) {
 	tempArray = [];
 	bounds = new google.maps.LatLngBounds();
     if (status == google.maps.places.PlacesServiceStatus.OK) {
+    	$('.results-error').hide();
     	for (var i = 0; i < results.length; i++) {
       		searchResults.push(new Location(results[i]));
       		tempArray.push(new Location(results[i]));
@@ -195,7 +198,7 @@ function callback(results, status) {
   		if (status == 'ZERO_RESULTS') {
   			$(".no-results").show();
   		} else {
-  			alert("Search request failed " + status);
+  			$('.results-error').show();
   		}
   	}
   	map.fitBounds(bounds);
@@ -217,11 +220,12 @@ function saveData(results, filter, selection) {
 
 function initialCallback(results, status) {
     if (status == google.maps.places.PlacesServiceStatus.OK) {
+    	$('.results-error').hide();
   		searchResults.push(new Location(results[0]));
   		tempArray.push(new Location(results[0]));
   		bounds.extend(results[0].geometry.location);
   	} else {
-  		alert("Search request failed " + status);
+  		$('.results-error').show();
   	}
 	populationCounter++;
 	
@@ -241,6 +245,11 @@ function details(place, status) {
 			if (place.name == pair.marker.title) {
 				setIwContent(pair.infoWindow, place);
 			}
+		})
+	} else {
+		markersAndInfoWindows.forEach(function(pair){
+			pair.infoWindow.setContent("<span class='iw-error'>DATA COULDN'T BE" + 
+										"RETREIVED,<br> PLEASE TRY AGAIN SHORTLY</SPAN>");
 		})
 	}
 }
@@ -375,6 +384,7 @@ var ViewModel = function() {
 		$("#search-input").val('');
 		$(".filter").val('');
 		$(".new-city").hide();
+		$(".results-error").hide();
 	};
 
 	this.weatherToggle = function() {
@@ -391,7 +401,6 @@ var ViewModel = function() {
 		if (filter) {
 			clearMarkers();
 			searchResults([]);
-			//console.log(tempArray);
 			tempArray.forEach(function(item) {
 				if (item.name().toLowerCase().search(filter) > -1) {
 					searchResults.push(item);
@@ -433,6 +442,9 @@ function weather(lat, lng) {
 		    				   wind: wind,
 		    				   image: iconUrl});
 		}
+	}).error(function() {
+		$('.weather-details').append("<span style='font-size: 13px'>WEATHER "+
+		 "DATA COUDLN'T BE RETREIVED, PLEASE TRY AGAIN SHORTLY</span>");
 	})
 }
 
@@ -446,6 +458,9 @@ function times(city) {
 	    						  url: item.web_url});
 	    	})
 	    }
+	}).error(function(e) {
+		$('.wiki').append("<span style='font-size: 14px; color: white'>NYTIMES ARTICLES "+
+		 "COULDN'T BE RETREIVED, PLEASE TRY AGAIN SHORTLY</span>");
 	})
 }
 

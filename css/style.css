@@ -234,6 +234,16 @@ body {
 	border: 1px solid #EF3E3E;
 }
 
+.results-error {
+	color: white;
+	font-size: 14px;
+}
+
+.iw-error {
+	font-size: 14px;
+	text-align: center;
+}
+
 @media screen and (min-width: 550px) {
 	.form {
 		width: 100%;
