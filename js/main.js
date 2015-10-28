@@ -78,10 +78,6 @@ function initMap() {
 		}
 	});
 
-
-
-
-
   	service = new google.maps.places.PlacesService(map);
 
   	var defaultBounds = new google.maps.LatLngBounds(
@@ -417,6 +413,7 @@ var ViewModel = function() {
 }
 
 function weather(lat, lng) {
+	$("#weather-error").remove();
 	weatherArray([]);
 	$.ajax({
 		url : "http://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lng+"&appid=3b226624aed979fa47deafd7a85e8a1d",
@@ -439,12 +436,13 @@ function weather(lat, lng) {
 		    				   image: iconUrl});
 		}
 	}).error(function() {
-		$('.weather-details').append("<span style='font-size: 13px'>WEATHER "+
+		$('.weather-details').append("<span id='weather-error' style='font-size: 13px'>WEATHER "+
 		 "DATA COUDLN'T BE RETREIVED, PLEASE TRY AGAIN SHORTLY</span>");
 	})
 }
 
 function times(city) {
+	$("#times-error").hide();
 	newsResults([]);
 	$.ajax({
 		url : "http://api.nytimes.com/svc/search/v2/articlesearch.json?q="+city+"&api-key=2bc73c1c7c519ec64cc7f2873b9e8744:16:72970449",
@@ -455,7 +453,7 @@ function times(city) {
 	    	})
 	    }
 	}).error(function(e) {
-		$('.wiki').append("<span style='font-size: 14px; color: white'>NYTIMES ARTICLES "+
+		$('.wiki').append("<span id='times-error' style='font-size: 14px; color: white'>NYTIMES ARTICLES "+
 		 "COULDN'T BE RETREIVED, PLEASE TRY AGAIN SHORTLY</span>");
 	})
 }
