@@ -76,7 +76,11 @@ function initMap() {
 		} else {
 			loadData();
 		}
-	});   	
+	});
+
+
+
+
 
   	service = new google.maps.places.PlacesService(map);
 
@@ -104,6 +108,11 @@ function initMap() {
 		$("#search-input").attr('placeholder', 'Search for places in the new city!');
 		$(".new-city").show();
 	});
+}
+
+function isInfoWindowOpen(infoWindow){
+    var map = infoWindow.getMap();
+    return (map !== null && typeof map !== "undefined");
 }
 
 function loadData() {
@@ -340,18 +349,32 @@ var ViewModel = function() {
 			}
 		})
 
+		var qaz;
+		var wsx;
 		markersAndInfoWindows.forEach(function(pair) {
 			if (name == pair.marker.title) {
 				pair.marker.setAnimation(google.maps.Animation.BOUNCE);
 				setTimeout(function() {
 					pair.marker.setAnimation(null);
 				}, 1500)
-				map.panTo({lat: pair.marker.place.location.lat()+0.003,
-						  lng: pair.marker.place.location.lng()});
+
+				iwLat = pair.marker.place.location.lat()+0.003;
+				iwLng = pair.marker.place.location.lng();
+
+				map.panTo({lat: iwLat, lng: iwLng});
 				pair.infoWindow.open(map, pair.marker);
 				map.setZoom(15);
+
+				google.maps.event.addDomListener(window, "resize", function() {
+					if (isInfoWindowOpen(pair.infoWindow)){
+						map.panTo({lat: iwLat, lng: iwLng});
+					}
+			    });
+
 			}
 		})
+
+
 	};
 
 	this.initiateSearch = function() {
