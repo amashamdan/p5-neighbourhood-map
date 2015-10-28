@@ -189,7 +189,8 @@ body {
 	top:35px;
 	left:0;
 	display: none;
-	background-color: #EF3E3E;
+	background-color: black;
+	opacity: 0.9;
 	color: white;
 	border: 1px solid white;
 	padding: 15px;
@@ -203,7 +204,7 @@ body {
 .close-weather {
 	font-size: 14px;
 	width: 100%;
-	color: #EF3E3E;
+	color: black;
 	background-color: white;
 	margin-top: 5px;
 	border: none;
@@ -232,6 +233,16 @@ body {
 	font-size: 14px;
 	padding: 2.5px;
 	border: 1px solid #EF3E3E;
+}
+
+.results-error {
+	color: white;
+	font-size: 14px;
+}
+
+.iw-error {
+	font-size: 14px;
+	text-align: center;
 }
 
 @media screen and (min-width: 550px) {
