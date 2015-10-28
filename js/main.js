@@ -282,6 +282,7 @@ function setIwContent(infoWindow, place) {
 function createIW() {
 	markersAndInfoWindows.forEach(function(pair) {
 		pair.marker.addListener('click', function() {
+			closeIW();
 			searchResults().forEach(function(item) {
 				if (item.name() == pair.marker.title) {
 					var name = item.name();
@@ -333,6 +334,9 @@ var ViewModel = function() {
 	};
 
 	this.iw = function() {
+
+		closeIW();
+
 		if ($(window).width() < 550) {
 			$(resultsWikiDiv).fadeOut();
 		}
@@ -454,6 +458,14 @@ function times(city) {
 		$('.wiki').append("<span style='font-size: 14px; color: white'>NYTIMES ARTICLES "+
 		 "COULDN'T BE RETREIVED, PLEASE TRY AGAIN SHORTLY</span>");
 	})
+}
+
+function closeIW() {
+	markersAndInfoWindows.forEach(function(pair) {
+		if (isInfoWindowOpen(pair.infoWindow)){
+			pair.infoWindow.close();
+		}
+	});
 }
 
 function iwSettings(name) {
