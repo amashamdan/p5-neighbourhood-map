@@ -284,17 +284,12 @@ function createIW() {
 		pair.marker.addListener('click', function() {
 			searchResults().forEach(function(item) {
 				if (item.name() == pair.marker.title) {
+					var name = item.name();
 					service.getDetails({placeId: item.placeId()}, details);
+					iwSettings(name);
 				}
 			})
-			map.panTo({lat: pair.marker.place.location.lat()+0.003, 
-					  lng: pair.marker.place.location.lng()});
-			pair.marker.setAnimation(google.maps.Animation.BOUNCE);
-			setTimeout(function() {
-				pair.marker.setAnimation(null);
-			}, 1500)
-			pair.infoWindow.open(map, pair.marker);
-			map.setZoom(15);
+			
 		})
 	})
 }
@@ -348,33 +343,7 @@ var ViewModel = function() {
 				service.getDetails({placeId: item.placeId()}, details);
 			}
 		})
-
-		var qaz;
-		var wsx;
-		markersAndInfoWindows.forEach(function(pair) {
-			if (name == pair.marker.title) {
-				pair.marker.setAnimation(google.maps.Animation.BOUNCE);
-				setTimeout(function() {
-					pair.marker.setAnimation(null);
-				}, 1500)
-
-				iwLat = pair.marker.place.location.lat()+0.003;
-				iwLng = pair.marker.place.location.lng();
-
-				map.panTo({lat: iwLat, lng: iwLng});
-				pair.infoWindow.open(map, pair.marker);
-				map.setZoom(15);
-
-				google.maps.event.addDomListener(window, "resize", function() {
-					if (isInfoWindowOpen(pair.infoWindow)){
-						map.panTo({lat: iwLat, lng: iwLng});
-					}
-			    });
-
-			}
-		})
-
-
+		iwSettings(name);
 	};
 
 	this.initiateSearch = function() {
@@ -484,6 +453,32 @@ function times(city) {
 	}).error(function(e) {
 		$('.wiki').append("<span style='font-size: 14px; color: white'>NYTIMES ARTICLES "+
 		 "COULDN'T BE RETREIVED, PLEASE TRY AGAIN SHORTLY</span>");
+	})
+}
+
+function iwSettings(name) {
+	var qaz;
+	var wsx;
+	markersAndInfoWindows.forEach(function(pair) {
+		if (name == pair.marker.title) {
+			pair.marker.setAnimation(google.maps.Animation.BOUNCE);
+			setTimeout(function() {
+				pair.marker.setAnimation(null);
+			}, 1500)
+
+			iwLat = pair.marker.place.location.lat()+0.003;
+			iwLng = pair.marker.place.location.lng();
+
+			map.panTo({lat: iwLat, lng: iwLng});
+			pair.infoWindow.open(map, pair.marker);
+			map.setZoom(15);
+
+			google.maps.event.addDomListener(window, "resize", function() {
+				if (isInfoWindowOpen(pair.infoWindow)){
+					map.panTo({lat: iwLat, lng: iwLng});
+				}
+		    });
+		}
 	})
 }
 
