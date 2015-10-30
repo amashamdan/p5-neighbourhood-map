@@ -391,6 +391,7 @@ var ViewModel = function() {
 	};
 
 	this.reset = function() {
+		weatherArray([]);
 		populationCounter = 0;
 		searchResults([]);
 		tempArray = [];
