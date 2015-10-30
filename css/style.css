@@ -83,6 +83,15 @@ body {
 	overflow-y: scroll;
 }
 
+.times-error {
+	font-size: 14px;
+	color: white;
+}
+
+.weather-error {
+	font-size: 13px;
+}
+
 .filter {
 	width: 100%;
 	margin: 2px 0 2px 0;
@@ -166,7 +175,6 @@ body {
 .no-results, .new-city {
 	color: white;
 	font-size: 13px;
-	display: none;
 }
 
 .reset {
@@ -244,6 +252,7 @@ body {
 	font-size: 14px;
 	text-align: center;
 }
+
 
 @media screen and (min-width: 550px) {
 	.form {

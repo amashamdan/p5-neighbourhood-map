@@ -9,7 +9,7 @@ var positionArray = [];
 
 function initMap() {
 	bounds = new google.maps.LatLngBounds();
-	$('.results-error').hide();
+	//showResultsErrorMessage(false);
 	if (!localStorage.searchResults) {
 		baseLocation = {lat: 47.605881, lng: -122.332047};
 	}
@@ -58,7 +58,7 @@ function initMap() {
   		
     }
 
-    var geocoder = new google.maps.Geocoder();
+    window.geocoder = new google.maps.Geocoder();
 
     google.maps.event.addListenerOnce(map, 'idle', function(){
     	if (!localStorage.searchResults) {
@@ -87,25 +87,12 @@ function initMap() {
 	var input = document.getElementById('search-input');
 	var cityInput = document.getElementById('city');
 
-	var searchBox = new google.maps.places.SearchBox(input, {
+	window.searchBox = new google.maps.places.SearchBox(input, {
 	  bounds: defaultBounds
 	});
 
-	var citySearchBox = new google.maps.places.SearchBox(cityInput, {
+	window.citySearchBox = new google.maps.places.SearchBox(cityInput, {
 	  bounds: defaultBounds
-	});
-
-	document.getElementById('city-search').addEventListener("submit", function(event) {
-	  	event.preventDefault();
-		marker.setMap(null); //removes the old city marker
-		codeAddress(geocoder, map, false, searchBox, citySearchBox);
-		searchResults([]);
-		weatherArray([]);
-		newsResults([]);
-		clearMarkers();
-		$("#search-input").val('');
-		$("#search-input").attr('placeholder', 'Search for places in the new city!');
-		$(".new-city").show();
 	});
 }
 
@@ -150,7 +137,6 @@ function loadData() {
 function codeAddress(geocoder, map, condition, searchBox, citySearchBox) {
     var address;
     tempArray = [];
-    $('.results-error').hide();
     if (condition) {
     	address = "Seattle";
     } else {
@@ -194,7 +180,7 @@ function callback(results, status) {
 	tempArray = [];
 	bounds = new google.maps.LatLngBounds();
     if (status == google.maps.places.PlacesServiceStatus.OK) {
-    	$('.results-error').hide();
+    	showResultsErrorMessage(false);
     	for (var i = 0; i < results.length; i++) {
       		searchResults.push(new Location(results[i]));
       		tempArray.push(new Location(results[i]));
@@ -204,9 +190,9 @@ function callback(results, status) {
     	}
   	} else {
   		if (status == 'ZERO_RESULTS') {
-  			$(".no-results").show();
+  			showNoResultsMessage(true);
   		} else {
-  			$('.results-error').show();
+  			showResultsErrorMessage(true);
   		}
   	}
   	map.fitBounds(bounds);
@@ -228,12 +214,12 @@ function saveData(results, filter, selection) {
 
 function initialCallback(results, status) {
     if (status == google.maps.places.PlacesServiceStatus.OK) {
-    	$('.results-error').hide();
+    	showResultsErrorMessage(false);
   		searchResults.push(new Location(results[0]));
   		tempArray.push(new Location(results[0]));
   		bounds.extend(results[0].geometry.location);
   	} else {
-  		$('.results-error').show();
+  		showResultsErrorMessage(true);
   	}
 	populationCounter++;
 	
@@ -322,6 +308,41 @@ var ViewModel = function() {
 	window.searchResults = ko.observableArray([]);
 	window.newsResults = ko.observableArray([]);
 	window.weatherArray = ko.observableArray([]);
+	noResultsMessage = ko.observable(false);
+	newCityMessage = ko.observable(false);
+	resultsErrorMessage = ko.observable(false);
+	timesErrorMessage = ko.observable(false);
+	weatherErrorMessage = ko.observable(false);
+
+	window.showWeatherErrorMessage = function(value) {
+		weatherErrorMessage(value);
+	}
+
+	window.showTimesErrorMessage = function(value) {
+		timesErrorMessage(value);
+	}
+
+	window.showResultsErrorMessage = function(value) {
+		resultsErrorMessage(value);
+	}
+
+	window.showNoResultsMessage = function(value) {
+		noResultsMessage(value);
+	}
+
+	this.citySearch = function() {
+		marker.setMap(null); //removes the old city marker
+		codeAddress(geocoder, map, false, searchBox, citySearchBox);
+		searchResults([]);
+		weatherArray([]);
+		newsResults([]);
+		clearMarkers();
+		$("#search-input").val('');
+		$("#search-input").attr('placeholder', 'Search for places in the new city!');
+		showNoResultsMessage(false);
+		showResultsErrorMessage(false);
+		newCityMessage(true);
+	}
 
 	this.resultsToggle = function() {
 		$(weatherDetails).hide();
@@ -353,8 +374,8 @@ var ViewModel = function() {
 
 		clearMarkers();
 		$(".filter").val('');
-		$(".new-city").hide();
-		$(".no-results").hide();
+		newCityMessage(false);
+		showNoResultsMessage(false);
 		searchResults([]);
 
 		if ($("#search-input").val()) {
@@ -378,17 +399,18 @@ var ViewModel = function() {
 		$("#city").val('');
 		$("#search-input").val('');
 		$(".filter").val('');
-		$(".new-city").hide();
-		$(".results-error").hide();
+		newCityMessage(false);
+		showResultsErrorMessage(false);
+		showNoResultsMessage(false);
 	};
 
 	this.weatherToggle = function() {
 		$(resultsWikiDiv).hide();
-		$('.weather-details').fadeToggle();
+		$(weatherDetails).fadeToggle();
 	}
 
 	this.weatherClose = function() {
-		$('.weather-details').fadeToggle();
+		$(weatherDetails).fadeToggle();
 	}
 
 	window.filter = function() {
@@ -416,7 +438,7 @@ var ViewModel = function() {
 }
 
 function weather(lat, lng) {
-	$("#weather-error").remove();
+	showWeatherErrorMessage(false);
 	
 	$.ajax({
 		url : "http://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lng+"&appid=3b226624aed979fa47deafd7a85e8a1d",
@@ -439,13 +461,13 @@ function weather(lat, lng) {
 		    				   image: iconUrl});
 		}
 	}).error(function() {
-		$('.weather-details').append("<span id='weather-error' style='font-size: 13px'>WEATHER "+
-		 "DATA COUDLN'T BE RETREIVED, PLEASE TRY AGAIN SHORTLY</span>");
+		showWeatherErrorMessage(true);
+		console.log("should see message");
 	})
 }
 
 function times(city) {
-	$("#times-error").hide();
+	showTimesErrorMessage(false);
 	
 	$.ajax({
 		url : "http://api.nytimes.com/svc/search/v2/articlesearch.json?q="+city+"&api-key=2bc73c1c7c519ec64cc7f2873b9e8744:16:72970449",
@@ -456,8 +478,7 @@ function times(city) {
 	    	})
 	    }
 	}).error(function(e) {
-		$('.wiki').append("<span id='times-error' style='font-size: 14px; color: white'>NYTIMES ARTICLES "+
-		 "COULDN'T BE RETREIVED, PLEASE TRY AGAIN SHORTLY</span>");
+		showTimesErrorMessage(true);
 	})
 }
 
