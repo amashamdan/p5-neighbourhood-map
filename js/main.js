@@ -100,6 +100,9 @@ function initMap() {
 		marker.setMap(null); //removes the old city marker
 		codeAddress(geocoder, map, false, searchBox, citySearchBox);
 		searchResults([]);
+		weatherArray([]);
+		newsResults([]);
+		clearMarkers();
 		$("#search-input").val('');
 		$("#search-input").attr('placeholder', 'Search for places in the new city!');
 		$(".new-city").show();
@@ -160,7 +163,6 @@ function codeAddress(geocoder, map, condition, searchBox, citySearchBox) {
 	      		map.setZoom(14);
 	      		searchBox.setBounds(map.getBounds());
 	      		citySearchBox.setBounds(map.getBounds());
-	      		clearMarkers();
 	      		var latitude = results[0].geometry.location.lat();
 	      		var longitude = results[0].geometry.location.lng();
 	      		weather(latitude, longitude);
@@ -170,7 +172,8 @@ function codeAddress(geocoder, map, condition, searchBox, citySearchBox) {
 	      	baseLocation = results[0].geometry.location;
 	      	cityMarker(results[0].address_components[0].long_name, baseLocation);
 	    } else {
-	      	alert("Geocode was not successful for the following reason: " + status);
+	      	alert("Cannot complete the requested search because of: " + status +
+	      		  ". Check your connectoin and try again later.");
     	}
   	});
 }
@@ -414,7 +417,7 @@ var ViewModel = function() {
 
 function weather(lat, lng) {
 	$("#weather-error").remove();
-	weatherArray([]);
+	
 	$.ajax({
 		url : "http://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lng+"&appid=3b226624aed979fa47deafd7a85e8a1d",
 	    success : function(parsed_json) {
@@ -443,7 +446,7 @@ function weather(lat, lng) {
 
 function times(city) {
 	$("#times-error").hide();
-	newsResults([]);
+	
 	$.ajax({
 		url : "http://api.nytimes.com/svc/search/v2/articlesearch.json?q="+city+"&api-key=2bc73c1c7c519ec64cc7f2873b9e8744:16:72970449",
 	    success : function(parsed_json) {
@@ -467,8 +470,8 @@ function closeIW() {
 }
 
 function iwSettings(name) {
-	var qaz;
-	var wsx;
+	var iwLat;
+	var iwLng;
 	markersAndInfoWindows.forEach(function(pair) {
 		if (name == pair.marker.title) {
 			pair.marker.setAnimation(google.maps.Animation.BOUNCE);
