@@ -26,20 +26,20 @@
 				</div>
 			</div>
 			<form id="city-search" data-bind="submit: citySearch">
-				<input id="city" placeholder="Change the city...">
+				<input id="city" placeholder="Change the city..." data-bind="textInput: searchCity">
 				<button class="go" type="submit">Go</button>
 			</form>
 		</div>
 		<div class="search-div">
 			<button class="drawer" data-bind="click: resultsToggle">Results</button>
 			<form class="form">
-				<input id="search-input" placeholder="Find new places...">
+				<input id="search-input" data-bind="textInput: searchPlaces, attr: {placeholder: searchPlaceholder}">
 				<button class="go" type="submit" data-bind="click: initiateSearch">Go</button>
 			</form>
 		</div>
 		<div class="results-wiki-div">
 			<h6 class="results-header">Search results</h6>
-			<input class="filter" placeholder="Filter results" data-bind="event: {keyup: filter}">
+			<input class="filter" placeholder="Filter results" data-bind="event: {keyup: filter}, textInput: filterValue">
 			<div class="results">
 				<span class="no-results" data-bind="visible: noResultsMessage">No results, please use the search bar to find new places.</span>
 				<span class="new-city" data-bind="visible: newCityMessage">Please use the search bar to look for places in the new city</span>

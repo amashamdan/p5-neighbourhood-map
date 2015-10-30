@@ -126,7 +126,7 @@ function loadData() {
 	lastPosition = {lat: Number(lastPositionLat),
 					lng: Number(lastPositionLng)};
 	baseLocation = lastPosition;
-	$(".filter").val(lastFilter);
+	setFilter(lastFilter);
 	filter();
 	placeMarkers(1);
 	cityMarker(localStorage.lastCity, lastPosition);
@@ -153,7 +153,7 @@ function codeAddress(geocoder, map, condition, searchBox, citySearchBox) {
 	      		var longitude = results[0].geometry.location.lng();
 	      		weather(latitude, longitude);
 	      		times(address);
-	      		$(".filter").val('');
+	      		setFilter('');
 	      	}
 	      	baseLocation = results[0].geometry.location;
 	      	cityMarker(results[0].address_components[0].long_name, baseLocation);
@@ -225,7 +225,7 @@ function initialCallback(results, status) {
 	
 	if (populationCounter == 10) {
 		if (localStorage.filter) {
-			$(".filter").val(localStorage.filter);
+			setFilter(localStorage.filter);
 			filter();
 		} else {	//the function filter has a call to filter.
 			placeMarkers(1);
@@ -313,6 +313,14 @@ var ViewModel = function() {
 	resultsErrorMessage = ko.observable(false);
 	timesErrorMessage = ko.observable(false);
 	weatherErrorMessage = ko.observable(false);
+	filterValue = ko.observable('');
+	searchPlaces = ko.observable('');
+	searchPlaceholder = ko.observable("Find new places...");
+	searchCity = ko.observable('');
+
+	window.setFilter = function(value) {
+		filterValue(value);
+	}
 
 	window.showWeatherErrorMessage = function(value) {
 		weatherErrorMessage(value);
@@ -337,8 +345,8 @@ var ViewModel = function() {
 		weatherArray([]);
 		newsResults([]);
 		clearMarkers();
-		$("#search-input").val('');
-		$("#search-input").attr('placeholder', 'Search for places in the new city!');
+		searchPlaces('');
+		searchPlaceholder('Search for places in the new city!');
 		showNoResultsMessage(false);
 		showResultsErrorMessage(false);
 		newCityMessage(true);
@@ -373,16 +381,16 @@ var ViewModel = function() {
 	this.initiateSearch = function() {
 
 		clearMarkers();
-		$(".filter").val('');
+		setFilter('');
 		newCityMessage(false);
 		showNoResultsMessage(false);
 		searchResults([]);
 
-		if ($("#search-input").val()) {
+		if (searchPlaces()) {
 			var request = {
 			    location: baseLocation,
 			    radius: '500',
-			    query: $("#search-input").val()
+			    query: searchPlaces()
 			};
 			service.textSearch(request, callback); 
 		} else {
@@ -391,17 +399,19 @@ var ViewModel = function() {
 	};
 
 	this.reset = function() {
+		weatherArray([]);
 		populationCounter = 0;
 		searchResults([]);
 		tempArray = [];
 		localStorage.clear();
 		initMap();
-		$("#city").val('');
-		$("#search-input").val('');
-		$(".filter").val('');
+		searchCity('');
+		searchPlaces('');
+		setFilter('');
 		newCityMessage(false);
 		showResultsErrorMessage(false);
 		showNoResultsMessage(false);
+		searchPlaceholder('Find new places...');
 	};
 
 	this.weatherToggle = function() {
@@ -414,8 +424,8 @@ var ViewModel = function() {
 	}
 
 	window.filter = function() {
-		var filter = $(".filter").val().toLowerCase();
-		if (filter) {
+		if (filterValue()) {
+			var filter = filterValue().toLowerCase();
 			clearMarkers();
 			searchResults([]);
 			tempArray.forEach(function(item) {
