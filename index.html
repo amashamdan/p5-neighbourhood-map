@@ -11,18 +11,21 @@
 	<body>
 		<div class="search-div">
 			<button class="weather" data-bind="click: weatherToggle">Weather</button>
-			<div class="weather-details" data-bind="foreach: weatherArray">
-				<img class="weather-icon" src="" alt="Weather icon" data-bind="attr: {src: image}">
-				<p class="weather-entry">Temperature in <span class="weather-entry" data-bind="text: name"> </span> is <span class="weather-entry" data-bind="text: temperature"></span> &degC</p>
-				<p class="weather-entry">Contdition: <span class="weather-entry" data-bind="text: condition"></span></p>
-				<p class="weather-entry">Clouds: <span class="weather-entry" data-bind="text: clouds"></span>%</p>
-				<p class="weather-entry">Humidity: <span class="weather-entry" data-bind="text: humidity"></span>%</p>
-				<p class="weather-entry">Wind speed: <span class="weather-entry" data-bind="text: wind"></span> m/s</p>
-				<button class="close-weather" data-bind="click: $parent.weatherClose">Close weather</button>
-				<a class="weather-credits" href="http://openweathermap.org/api" target="blank">Weather provided by OpenWeatherMap</a>
-				<a class="weather-credits" href="http://findicons.com/pack/2607/tick_weather_icons" target="blank">Weather icons provided by FindIcons</a>
+			<div class="weather-details">
+				<div class='weather-error' data-bind="visible:weatherErrorMessage">WEATHER DATA COUDLN'T BE RETREIVED, PLEASE TRY AGAIN SHORTLY</div>
+				<div data-bind="foreach: weatherArray">
+					<img class="weather-icon" src="" alt="Weather icon" data-bind="attr: {src: image}">
+					<p class="weather-entry">Temperature in <span class="weather-entry" data-bind="text: name"> </span> is <span class="weather-entry" data-bind="text: temperature"></span> &degC</p>
+					<p class="weather-entry">Contdition: <span class="weather-entry" data-bind="text: condition"></span></p>
+					<p class="weather-entry">Clouds: <span class="weather-entry" data-bind="text: clouds"></span>%</p>
+					<p class="weather-entry">Humidity: <span class="weather-entry" data-bind="text: humidity"></span>%</p>
+					<p class="weather-entry">Wind speed: <span class="weather-entry" data-bind="text: wind"></span> m/s</p>
+					<button class="close-weather" data-bind="click: $parent.weatherClose">Close weather</button>
+					<a class="weather-credits" href="http://openweathermap.org/api" target="blank">Weather provided by OpenWeatherMap</a>
+					<a class="weather-credits" href="http://findicons.com/pack/2607/tick_weather_icons" target="blank">Weather icons provided by FindIcons</a>
+				</div>
 			</div>
-			<form id="city-search">
+			<form id="city-search" data-bind="submit: citySearch">
 				<input id="city" placeholder="Change the city...">
 				<button class="go" type="submit">Go</button>
 			</form>
@@ -38,15 +41,16 @@
 			<h6 class="results-header">Search results</h6>
 			<input class="filter" placeholder="Filter results" data-bind="event: {keyup: filter}">
 			<div class="results">
-				<span class="no-results">No results, please use the search bar to find new places.</span>
-				<span class="new-city">Please use the search bar to look for places in the new city</span>
-				<span class="results-error">DATA COULDN'T BE RETREIVED, PLEASE TRY AGAIN SHORTLY</span>
+				<span class="no-results" data-bind="visible: noResultsMessage">No results, please use the search bar to find new places.</span>
+				<span class="new-city" data-bind="visible: newCityMessage">Please use the search bar to look for places in the new city</span>
+				<span class="results-error" data-bind="visible: resultsErrorMessage">DATA COULDN'T BE RETREIVED, PLEASE TRY AGAIN SHORTLY</span>
 				<ul class="results-list" data-bind="foreach: searchResults">
 					<li class="result-element" data-bind="text: name, click: $parent.iw"></li>
 				</ul>
 			</div>
 			<h6 class="results-header">NYTimes results</h6>
 			<div class="wiki">
+				<span class='times-error' data-bind="visible: timesErrorMessage">NYTIMES ARTICLES COULDN'T BE RETREIVED, PLEASE TRY AGAIN SHORTLY</span>
 				<div class="scroll">
 					<ul class="results-list" data-bind="foreach: newsResults">
 						<li class="result-element"><a class="news-link" href='' target="blank" data-bind="attr: {href: url}"><span class="news-headline" data-bind="text: headline"></span></a></li>
