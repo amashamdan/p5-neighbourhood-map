@@ -771,6 +771,8 @@ var ViewModel = function() {
 		clearMarkers();
 		/** The place search input field is reset. */
 		searchPlaces('');
+		/** filter in local storage is reset. */
+		localStorage.filter = '';
 		/** The placeholder of the place search input field is changed. */
 		searchPlaceholder('Search for places in the new city!');
 		/** If the 'no results message' is shown, it is hidden by calling the showNoResultsMessage
@@ -837,6 +839,8 @@ var ViewModel = function() {
 		clearMarkers();
 		/** The filter field is reset. */
 		setFilter('');
+		/** filter in local storage is reset. */
+		localStorage.filter = '';
 		/** The 'new city message' in the results list is hidden (if initially displayed). */
 		newCityMessage(false);
 		/** The 'no results message' in the results list is hidden (if initially displayed). */
