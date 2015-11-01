@@ -1,4 +1,32 @@
-/** A global variable which holds the information of markers and infoWindows */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: main.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: main.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** A global variable which holds the information of markers and infoWindows */
 var markersAndInfoWindows = [];
 
 /** A global variable which stores the location of the current city on the map */
@@ -292,7 +320,7 @@ function callback(results, status) {
     	a call to the showResultsErrorMessage function. */
     	showResultsErrorMessage(false);
     	/** For each results item, the following lines are executed. */
-    	for (var i = 0; i < results.length; i++) {
+    	for (var i = 0; i &lt; results.length; i++) {
     		/** Each result item is pushed to the searchResults Array.
     		Each result is pushed as a 'Location' object */
       		searchResults.push(new Location(results[i]));
@@ -384,7 +412,7 @@ function loadData() {
 	/** The baseLocation is updated to the saved city. */
 	baseLocation = lastPosition;
 
-	for (var i = 0; i < temp.length; i++) {
+	for (var i = 0; i &lt; temp.length; i++) {
 		/** The searchResults array is filled with loaded data places. */
 		searchResults.push(new Location(temp[i]));
 		/** The position of each place is pushed to the searchResults array. */
@@ -433,8 +461,8 @@ function details(place, status) {
 		/** If the getDetails request fails, the infoWindow of the clicked place will display
 		and error message to the user. */
 		markersAndInfoWindows.forEach(function(pair){
-			pair.infoWindow.setContent("<span class='iw-error'>DATA COULDN'T BE" + 
-										"RETREIVED,<br> PLEASE TRY AGAIN SHORTLY</SPAN>");
+			pair.infoWindow.setContent("&lt;span class='iw-error'>DATA COULDN'T BE" + 
+										"RETREIVED,&lt;br> PLEASE TRY AGAIN SHORTLY&lt;/SPAN>");
 		});
 	}
 };
@@ -527,13 +555,13 @@ function setIwContent(infoWindow, place) {
 	
 	/** The results from the getDetails service are appended to the infoWindow. The information
 	includes: place name, address, phone number, google+ page, rating, and an image. */
-	infoWindow.setContent('<h4 class="iwTitle">'+place.name+'</h4>'+
-		  				  '<span class="iwAddress">Address: '+place.address_components[0].short_name+
-		  				  ' '+place.address_components[1].short_name+'</span>'+'<br>'+
-		  				  '<span class="iwPhone">Phone: '+place.formatted_phone_number+'</span>'+'<br>'+
-		  				  '<a target="blank" class="iwGoogle" href='+place.url+'>Click for Google+ page</a>'+'<br>'+
-		  				  '<span class="iwRating">Rating: '+place.rating+'</span>'+'<br>'+
-		  				  '<img class="iwImage" src='+imageUrl+'>');
+	infoWindow.setContent('&lt;h4 class="iwTitle">'+place.name+'&lt;/h4>'+
+		  				  '&lt;span class="iwAddress">Address: '+place.address_components[0].short_name+
+		  				  ' '+place.address_components[1].short_name+'&lt;/span>'+'&lt;br>'+
+		  				  '&lt;span class="iwPhone">Phone: '+place.formatted_phone_number+'&lt;/span>'+'&lt;br>'+
+		  				  '&lt;a target="blank" class="iwGoogle" href='+place.url+'>Click for Google+ page&lt;/a>'+'&lt;br>'+
+		  				  '&lt;span class="iwRating">Rating: '+place.rating+'&lt;/span>'+'&lt;br>'+
+		  				  '&lt;img class="iwImage" src='+imageUrl+'>');
 };
 
 /*
@@ -558,7 +586,7 @@ function closeIW() {
   */
 function isInfoWindowOpen(infoWindow){
     var map = infoWindow.getMap();
-    return (map !== null && typeof map !== "undefined");
+    return (map !== null &amp;&amp; typeof map !== "undefined");
 };
 
 /**
@@ -586,7 +614,7 @@ function weather(lat, lng) {
 	/** AJAX resuest to Open Weather Map using the latitude and longitude of the current city
 	for accurate results. */
 	$.ajax({
-		url : "http://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lng+"&appid=3b226624aed979fa47deafd7a85e8a1d",
+		url : "http://api.openweathermap.org/data/2.5/weather?lat="+lat+"&amp;lon="+lng+"&amp;appid=3b226624aed979fa47deafd7a85e8a1d",
 	    /** If the request succeeds, the results JSON is parsed. */
 	    success : function(parsed_json) {
 		    var location = parsed_json.name;
@@ -626,7 +654,7 @@ function times(city) {
 	showTimesErrorMessage(false);
 	/** AJAX resuest to NyTimes using the name of the current city. */
 	$.ajax({
-		url : "http://api.nytimes.com/svc/search/v2/articlesearch.json?q="+city+"&api-key=2bc73c1c7c519ec64cc7f2873b9e8744:16:72970449",
+		url : "http://api.nytimes.com/svc/search/v2/articlesearch.json?q="+city+"&amp;api-key=2bc73c1c7c519ec64cc7f2873b9e8744:16:72970449",
 	    /** If the request succeeds, the results JSON is parsed. and the headline for each
 	    result item is pushed to the newsResults array which is used to display the list
 	    of the news articles using Knockout bindings. */
@@ -816,7 +844,7 @@ var ViewModel = function() {
 		/** A call to the closeIW to close all open infoWindows, */
 		closeIW();
 		/** If the display width is less than 550px, the results div is faded out. */
-		if ($(window).width() < 550) {
+		if ($(window).width() &lt; 550) {
 			$(resultsWikiDiv).fadeOut();
 		}
 		var name = this.name();
@@ -967,4 +995,26 @@ var ViewModel = function() {
 };
 
 /** Apply Knockout bindings. */
-ko.applyBindings(new ViewModel());
+ko.applyBindings(new ViewModel());</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Location.html">Location</a></li><li><a href="ViewModel.html">ViewModel</a></li></ul><h3>Global</h3><ul><li><a href="global.html#baseLocation">baseLocation</a></li><li><a href="global.html#callback">callback</a></li><li><a href="global.html#cityMarker">cityMarker</a></li><li><a href="global.html#clearMarkers">clearMarkers</a></li><li><a href="global.html#createIW">createIW</a></li><li><a href="global.html#details">details</a></li><li><a href="global.html#icon">icon</a></li><li><a href="global.html#initialCallback">initialCallback</a></li><li><a href="global.html#initialLocations">initialLocations</a></li><li><a href="global.html#initMap">initMap</a></li><li><a href="global.html#isInfoWindowOpen">isInfoWindowOpen</a></li><li><a href="global.html#iwSettings">iwSettings</a></li><li><a href="global.html#loadData">loadData</a></li><li><a href="global.html#markersAndInfoWindows">markersAndInfoWindows</a></li><li><a href="global.html#populationCounter">populationCounter</a></li><li><a href="global.html#positionArray">positionArray</a></li><li><a href="global.html#saveData">saveData</a></li><li><a href="global.html#setIwContent">setIwContent</a></li><li><a href="global.html#success">success</a></li><li><a href="global.html#tempArray">tempArray</a></li><li><a href="global.html#times">times</a></li><li><a href="global.html#weather">weather</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a> on Mon Nov 02 2015 00:43:39 GMT+0200 (Jerusalem Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

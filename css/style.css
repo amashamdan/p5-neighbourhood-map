@@ -20,11 +20,6 @@ body {
 	height: calc(100% - 70px);
 }
 
-.container {
-	display: flex;
-	flex-wrap: wrap;
-}
-
 .search-div {
 	background-color: #EF3E3E;
 	width: 100%;
@@ -55,139 +50,6 @@ body {
 	margin: 0;
 	padding: 0;
 	width: calc(100% - 60px);
-}
-
-.go {
-	border: 1px solid white;
-	height: 25px;
-	width: 30px;
-	margin: 5px;
-	background-color: #EF3E3E;
-	color: white;, 
-}
-
-.results-wiki-div {
-	background-color: #EF3E3E;
-	width: 200px;
-	padding: 5px;
-	display: none;
-	position: fixed;
-	top: 70px;
-	left: 0;
-	z-index: 2;
-	height: calc(100% - 70px);
-}
-
-.results, .wiki {
-	height: calc(50% - 50px);
-	overflow-y: scroll;
-}
-
-.times-error {
-	font-size: 14px;
-	color: white;
-}
-
-.weather-error {
-	font-size: 13px;
-}
-
-.filter {
-	width: 100%;
-	margin: 2px 0 2px 0;
-	font-size: 12px;
-	padding: 2.5px;
-}
-
-.result-element {
-	color: white;
-	border-bottom: 1px solid white;
-	padding: 5px 0 5px 5px;
-	font-size: 13px;
-}
-
-.news-link {
-	text-decoration: none;
-	color: white;
-}
-
-.news-headline {
-	font-size: 13px;
-}
-
-.close-results {
-	width: 100%;
-	background-color: white;
-	color: #EF3E3E;
-	border: 1px solid white;
-	margin-top: 5px;
-}
-
-.close-results:hover {
-	background-color: #EF3E3E;
-	color: white;
-	cursor: pointer;
-} 
-
-.result-element:hover, .drawer:hover, .go:hover, .weather:hover, .news-link:hover {
-	cursor: pointer;
-	background-color: white;
-	color: #EF3E3E;
-}
-
-.iwTitle {
-	border: 1px solid red;
-	width: 180px;
-	text-align: center;
-	background-color: #EF3E3E;
-	color: white;
-	font-size: 13px;
-	font-weight: normal;
-	padding: 5px;
-	margin: 5px 0 5px 0;
-}
-
-.iwAddress, .iwPhone, .iwRating {
-	font-size: 13px;
-}
-
-.iwGoogle {
-	font-size: 13px;
-	color: #EF3E3E;
-}
-
-.iwImage {
-	margin-top: 5px;
-	position: relative;
-	left: 50px;
-	width:80px;
-}
-
-.credits {
-	background-color: white;
-	color: #EF3E3E;
-	position: fixed;
-	font-size: 11px;
-	top: calc(100% - 26px);
-	right:45px;
-}
-
-.no-results, .new-city {
-	color: white;
-	font-size: 13px;
-}
-
-.reset {
-	position: fixed;
-	padding: 6.5px;
-	top: 80px;
-	left: 120px;
-	z-index: 1;
-	font-size: 13px;
-	font-weight: bold;
-	background-color: white;
-	color: #EF3E3E;
-	border: none;
 }
 
 .weather-details {
@@ -235,6 +97,36 @@ body {
 	color: white;
 }
 
+.weather-error {
+	font-size: 13px;
+}
+
+.go {
+	border: 1px solid white;
+	height: 25px;
+	width: 30px;
+	margin: 5px;
+	background-color: #EF3E3E;
+	color: white;, 
+}
+
+.results-wiki-div {
+	background-color: #EF3E3E;
+	width: 200px;
+	padding: 5px;
+	display: none;
+	position: fixed;
+	top: 70px;
+	left: 0;
+	z-index: 2;
+	height: calc(100% - 70px);
+}
+
+.results, .wiki {
+	height: calc(50% - 50px);
+	overflow-y: scroll;
+}
+
 .results-header {
 	background-color: #246868;
 	color: white;
@@ -243,9 +135,90 @@ body {
 	border: 1px solid #EF3E3E;
 }
 
+.filter {
+	width: 100%;
+	margin: 2px 0 2px 0;
+	font-size: 12px;
+	padding: 2.5px;
+}
+
+.result-element {
+	color: white;
+	border-bottom: 1px solid white;
+	padding: 5px 0 5px 5px;
+	font-size: 13px;
+}
+
+.no-results, .new-city {
+	color: white;
+	font-size: 13px;
+}
+
 .results-error {
 	color: white;
 	font-size: 14px;
+}
+
+.news-link {
+	text-decoration: none;
+	color: white;
+}
+
+.news-headline {
+	font-size: 13px;
+}
+
+.close-results {
+	width: 100%;
+	background-color: white;
+	color: #EF3E3E;
+	border: 1px solid white;
+	margin-top: 5px;
+}
+
+.close-results:hover {
+	background-color: #EF3E3E;
+	color: white;
+	cursor: pointer;
+} 
+
+.result-element:hover, .drawer:hover, .go:hover, .weather:hover, .news-link:hover {
+	cursor: pointer;
+	background-color: white;
+	color: #EF3E3E;
+}
+
+.times-error {
+	font-size: 14px;
+	color: white;
+}
+
+.iwTitle {
+	border: 1px solid red;
+	width: 180px;
+	text-align: center;
+	background-color: #EF3E3E;
+	color: white;
+	font-size: 13px;
+	font-weight: normal;
+	padding: 5px;
+	margin: 5px 0 5px 0;
+}
+
+.iwAddress, .iwPhone, .iwRating {
+	font-size: 13px;
+}
+
+.iwGoogle {
+	font-size: 13px;
+	color: #EF3E3E;
+}
+
+.iwImage {
+	margin-top: 5px;
+	position: relative;
+	left: 50px;
+	width:80px;
 }
 
 .iw-error {
@@ -253,6 +226,27 @@ body {
 	text-align: center;
 }
 
+.credits {
+	background-color: white;
+	color: #EF3E3E;
+	position: fixed;
+	font-size: 11px;
+	top: calc(100% - 26px);
+	right:45px;
+}
+
+.reset {
+	position: fixed;
+	padding: 6.5px;
+	top: 80px;
+	left: 120px;
+	z-index: 1;
+	font-size: 13px;
+	font-weight: bold;
+	background-color: white;
+	color: #EF3E3E;
+	border: none;
+}
 
 @media screen and (min-width: 550px) {
 	.form {
@@ -294,6 +288,7 @@ body {
 	.weather-details {
 		z-index: 5;
 	}
+}
 
 @media screen and (min-width: 800px) {
 	* {
@@ -330,4 +325,3 @@ body {
 		z-index: 5;
 	}
 }
-
