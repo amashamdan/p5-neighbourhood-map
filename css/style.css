@@ -288,6 +288,7 @@ body {
 	.weather-details {
 		z-index: 5;
 	}
+}
 
 @media screen and (min-width: 800px) {
 	* {
@@ -324,4 +325,3 @@ body {
 		z-index: 5;
 	}
 }
-
