@@ -1,4 +1,4 @@
-<span style="font-size: 14px">Neighbourhood Map Project (Udacity Front-end Nanodegree)
+<span style="font-size: 14px">Neighbourhood Map Project (Udacity Front-end Nanodegree)</span>
 ========================================================
 Layout
 sign in to google
