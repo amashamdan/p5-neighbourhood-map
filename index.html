@@ -4,15 +4,17 @@
 		<meta charset="utf-8">
 		<title>Amer's Map</title>
 		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-	<!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
 		<link rel="stylesheet" href="css/style.css">
 		<script src="js/lib/jquery.min.js"></script>
 	</head>
 	<body>
+		<!-- This div contains the weather widget button, and the city search field. -->
 		<div class="search-div">
 			<button class="weather" data-bind="click: weatherToggle">Weather</button>
 			<div class="weather-details">
+				<!-- Weather error message shown with Knockout visible binding to weatherErrorMessage observable. -->
 				<div class='weather-error' data-bind="visible:weatherErrorMessage">WEATHER DATA COUDLN'T BE RETREIVED, PLEASE TRY AGAIN SHORTLY</div>
+				<!-- Weather data are displayed with Knockout foreach bindings to weatherArray observable array. -->
 				<div data-bind="foreach: weatherArray">
 					<img class="weather-icon" src="" alt="Weather icon" data-bind="attr: {src: image}">
 					<p class="weather-entry">Temperature in <span class="weather-entry" data-bind="text: name"> </span> is <span class="weather-entry" data-bind="text: temperature"></span> &degC</p>
@@ -25,44 +27,61 @@
 					<a class="weather-credits" href="http://findicons.com/pack/2607/tick_weather_icons" target="blank">Weather icons provided by FindIcons</a>
 				</div>
 			</div>
+			<!-- This form is used to search for a new city. -->
 			<form id="city-search" data-bind="submit: citySearch">
 				<input id="city" placeholder="Change the city..." data-bind="textInput: searchCity">
 				<button class="go" type="submit">Go</button>
 			</form>
 		</div>
+		<!-- Another search div which contains the results button (for small screen sizes) and the places search input field -->
 		<div class="search-div">
+			<!-- The results are toggled on and off with a Knockout click binding. -->
 			<button class="drawer" data-bind="click: resultsToggle">Results</button>
+			<!-- This form is used to search for new places. -->
 			<form class="form">
 				<input id="search-input" data-bind="textInput: searchPlaces, attr: {placeholder: searchPlaceholder}">
 				<button class="go" type="submit" data-bind="click: initiateSearch">Go</button>
 			</form>
 		</div>
+		<!-- This div contains the list of search results and list of NyTimes articles about the current city. -->
 		<div class="results-wiki-div">
 			<h6 class="results-header">Search results</h6>
+			<!-- This is the filter input field. -->
 			<input class="filter" placeholder="Filter results" data-bind="event: {keyup: filter}, textInput: filterValue">
+			<!-- Search results div -->
 			<div class="results">
+				<!-- The following three span elements are messages to the user shown using Knockout visible binginds. The messsages are all shown in the results list when there no results, a new city is chosen, or when there is an error in retrieving results. -->
 				<span class="no-results" data-bind="visible: noResultsMessage">No results, please use the search bar to find new places.</span>
 				<span class="new-city" data-bind="visible: newCityMessage">Please use the search bar to look for places in the new city</span>
 				<span class="results-error" data-bind="visible: resultsErrorMessage">DATA COULDN'T BE RETREIVED, PLEASE TRY AGAIN SHORTLY</span>
+				<!-- This is the results list, it is shown with Knockout foreach binding to searchResults observable array. -->
 				<ul class="results-list" data-bind="foreach: searchResults">
 					<li class="result-element" data-bind="text: name, click: $parent.iw"></li>
 				</ul>
 			</div>
 			<h6 class="results-header">NYTimes results</h6>
+			<!-- NyTimes results div -->
 			<div class="wiki">
+				<!-- A message error shown in the NyTimes list in case of error in retrieving results. The message is shown with a Knockout visible binding to timesErrorMessage observable. -->
 				<span class='times-error' data-bind="visible: timesErrorMessage">NYTIMES ARTICLES COULDN'T BE RETREIVED, PLEASE TRY AGAIN SHORTLY</span>
 				<div class="scroll">
+				<!-- NyTimes articles list, displayed with Knockout binding to newsResults observable array. -->
 					<ul class="results-list" data-bind="foreach: newsResults">
 						<li class="result-element"><a class="news-link" href='' target="blank" data-bind="attr: {href: url}"><span class="news-headline" data-bind="text: headline"></span></a></li>
 					</ul>
 				</div>
 			</div>
+			<!-- For small screen sizes, this button is displayed to close the results list. -->
 			<button class="close-results" data-bind="click: resultsClose">Close list</button>
 		</div>
+		<!-- Reset button to reset the map to its default view. -->
 		<button class="reset" data-bind="click: reset">Reset map</button>
+		<!-- Map div. -->
 		<div id="map"></div>
+		<!-- Credits to the custom icons provider. -->
 		<a class="credits" href='https://mapicons.mapsmarker.com' target="blank">Markers by: Maps Icons Collection</a>
 		<script src="js/lib/knockout-3.2.0.js"></script>
+		<!-- A file containing the custom markers image URLs. -->
 		<script src="js/markers_list.js"></script>
 		<script src="js/main.js"></script>
 		<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFgUKHT5M83YmAcue-nHgU-VpCjoeozsQ&callback=initMap&signed_in=true&libraries=places">
