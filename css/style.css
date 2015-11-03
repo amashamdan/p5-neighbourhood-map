@@ -6,7 +6,8 @@
 	font-family: calibri;
 }
 
-html, body {
+html, 
+body {
 	height: 100%;
 }
 
@@ -29,7 +30,8 @@ body {
 	flex-wrap: wrap;
 }
 
-.drawer, .weather {
+.drawer, 
+.weather {
 	height: 25px;
 	margin: 5px;
 	width: 50px;
@@ -39,14 +41,16 @@ body {
 	border: 1px solid white;
 }
 
-#search-input, #city {
+#search-input, 
+#city {
 	height: 25px;
 	margin: 5px;
 	padding: 0 5px 0 5px;
 	width: calc(100% - 55px);
 }
 
-.form, #city-search {
+.form, 
+#city-search {
 	margin: 0;
 	padding: 0;
 	width: calc(100% - 60px);
@@ -122,7 +126,8 @@ body {
 	height: calc(100% - 70px);
 }
 
-.results, .wiki {
+.results, 
+.wiki {
 	height: calc(50% - 50px);
 	overflow-y: scroll;
 }
@@ -149,7 +154,8 @@ body {
 	font-size: 13px;
 }
 
-.no-results, .new-city {
+.no-results,
+.new-city {
 	color: white;
 	font-size: 13px;
 }
@@ -182,7 +188,11 @@ body {
 	cursor: pointer;
 } 
 
-.result-element:hover, .drawer:hover, .go:hover, .weather:hover, .news-link:hover {
+.result-element:hover,
+.drawer:hover,
+.go:hover,
+.weather:hover,
+.news-link:hover {
 	cursor: pointer;
 	background-color: white;
 	color: #EF3E3E;
@@ -205,7 +215,9 @@ body {
 	margin: 5px 0 5px 0;
 }
 
-.iwAddress, .iwPhone, .iwRating {
+.iwAddress,
+.iwPhone,
+.iwRating {
 	font-size: 13px;
 }
 
@@ -271,11 +283,14 @@ body {
 	.close-results {
 		display: none;
 	}
-	.results, .wiki {
+	.results,
+	.wiki {
 		height: calc(50% - 36px);
 		overflow-y: scroll;
 	}
-	.iwTitle, .iwAddress, .iwUrl {
+	.iwTitle,
+	.iwAddress,
+	.iwUrl {
 		font-size: 14px;
 	}
 	.iwImage {
@@ -305,7 +320,8 @@ body {
 		width: 250px;
 		max-height: calc(100% - 80px);
 	}
-	.results, .wiki {
+	.results,
+	.wiki {
 		height: calc(50% - 36px);
 		overflow-y: scroll;
 	}
