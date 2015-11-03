@@ -21,7 +21,7 @@ var positionArray = [];
 var initialLocations = ["Seattle Aquarium", "Harborview Medical Center",
 						"Sky View Observatory", "Washington State Convention Center",
 						"Space Needle", "Cinerama", "Cal Anderson Park Fountain",
-						"Seattle Center", "Westlake Center", "Pike Place Fish Market"]
+						"Seattle Center", "Westlake Center", "Pike Place Fish Market"];
 
 /**
   * The function which initializes the map upon receiving response from google maps API.
@@ -102,7 +102,7 @@ function initMap() {
 			loadData();
 		}
 	});
-};
+}
 
 /*
   * This function is responsible for placing markers on the map for searched places.
@@ -117,7 +117,7 @@ function placeMarkers(effectState) {
 	var timeDelay = [0, 100];
 	/** An array which holds the possible animations fot the markers.
 	The effectState argument specifies th index of the selected animation */
-	var effect = [google.maps.Animation.NONE, google.maps.Animation.DROP]
+	var effect = [google.maps.Animation.NONE, google.maps.Animation.DROP];
 	/** The searchResults array contains the places search results.
 	For each item (location) in this array, a marker and an empty infoWindow are created. */
 	searchResults().forEach(function(item){
@@ -151,7 +151,7 @@ function placeMarkers(effectState) {
 		}, counter*timeDelay[effectState]);
 		counter++;
 	});
-};
+}
 
 /*
   * A function to search for a new city.
@@ -209,7 +209,7 @@ function codeAddress(geocoder, map, condition, searchBox, citySearchBox) {
 	      		  ". Check your connectoin and try again later.");
     	}
   	});
-};
+}
 
 /**
   *	A function which places a DEFAULT marker on the map for the current city.
@@ -230,7 +230,7 @@ function cityMarker(city, position) {
     localStorage.lastLat = marker.position.lat();
     /** The longitude of the current city is stored locally to be retrieved after page reload. */
     localStorage.lastLng = marker.position.lng();
-};
+}
 
 /**
   * This function is called after the map is loaded if no data are stored.
@@ -275,7 +275,7 @@ function initialCallback(results, status) {
 			placeMarkers(1);
 		}
 	}
-};
+}
 
 /**
   * This function is called when the user initiates a places search using the places search
@@ -324,7 +324,7 @@ function callback(results, status) {
 	placeMarkers(1);
 	/** A call to saveData function which saves the results of the search. */
 	saveData(results, "", 1);
-};
+}
 
 /**
   * This function saves the search results and the search filters.
@@ -349,7 +349,7 @@ function saveData(results, filter, selection) {
 		filter is stored locally. */
 		localStorage.filter = filter;
 	}
-};
+}
 
 /**
   * This function loads the stored data.
@@ -412,7 +412,7 @@ function loadData() {
 	weather(Number(lastPositionLat), Number(lastPositionLng));
 	/** The times function is called to retrieve news articles about the loaded city. */
 	times(lastCity);
-};
+}
 
 /**
   * This function is called when an infoWindow is opened to request detailed information
@@ -437,7 +437,7 @@ function details(place, status) {
 										"RETREIVED,<br> PLEASE TRY AGAIN SHORTLY</SPAN>");
 		});
 	}
-};
+}
 
 /**
   * This function adds an event listener to the places' markers on the map.
@@ -463,7 +463,7 @@ function createIW() {
 			});
 		});
 	});
-};
+}
 
 /**
   * This function specifies some settings upon opening an infoWindow.
@@ -507,7 +507,7 @@ function iwSettings(name) {
 		    });
 		}
 	});
-};
+}
 
 /**
   * This function sets the content of the infoWindow. 
@@ -534,7 +534,7 @@ function setIwContent(infoWindow, place) {
 		  				  '<a target="blank" class="iwGoogle" href='+place.url+'>Click for Google+ page</a>'+'<br>'+
 		  				  '<span class="iwRating">Rating: '+place.rating+'</span>'+'<br>'+
 		  				  '<img class="iwImage" src='+imageUrl+'>');
-};
+}
 
 /*
   * A function which closes any opened infoWindow upon opening a new one.
@@ -549,7 +549,7 @@ function closeIW() {
 			pair.infoWindow.close();
 		}
 	});
-};
+}
 
 /**
   * This function checks if any infoWindow is open. It is used to close an infoWindow
@@ -559,7 +559,7 @@ function closeIW() {
 function isInfoWindowOpen(infoWindow){
     var map = infoWindow.getMap();
     return (map !== null && typeof map !== "undefined");
-};
+}
 
 /**
   * The following function removes all markers on the map.
@@ -572,7 +572,7 @@ function clearMarkers() {
 	});
 	/** The markersAndInfoWindows array is reset. */
 	markersAndInfoWindows = [];
-};
+}
 
 /**
   * The weather function places an AJAX request to collect weather information about
@@ -598,7 +598,7 @@ function weather(lat, lng) {
 		    /** An icon code is retrieved which specifies the weather conditions. */
 		    var icon = parsed_json.weather[0].icon;
 		    /** The weather icon is selected based on the icon code retrieved in the previous line. */
-		    var iconUrl = "weather_images/"+icon+".png"
+		    var iconUrl = "weather_images/"+icon+".png";
 		    /** The information are pushed to the weatherArray which is used to display
 		    weather information on the map using Knockout bindings. */
 		    weatherArray.push({name: location, 
@@ -614,7 +614,7 @@ function weather(lat, lng) {
 		showWeatherErrorMessage function. */
 		showWeatherErrorMessage(true);
 	});
-};
+}
 
 /**
   * The times function places an AJAX request to collect news articles about the current city.
@@ -634,14 +634,14 @@ function times(city) {
 	    	parsed_json.response.docs.forEach(function(item) {
 	    		newsResults.push({headline: item.headline.main,
 	    						  url: item.web_url});
-	    	})
+	    	});
 	    }
-	}).error(function(e) {
+	}).error(function() {
 		/** If the request fails, an error message is shown is the NyTimes div using the 
 		showTimesErrorMessage function. */
 		showTimesErrorMessage(true);
 	});
-};
+}
 
 /**
   * Location class. After a places search, each result item is pushed to the searchResults
@@ -662,8 +662,6 @@ var Location = function(data) {
   *@class
   */
 var ViewModel = function() {
-	/** The variable self is set to 'this'. */
-	var self = this;
 	/** A varialbe referring to results-wiki-div. */
 	var resultsWikiDiv = $(".results-wiki-div");
 	/** A varialbe referring to the weather-deatails div. */
@@ -825,7 +823,7 @@ var ViewModel = function() {
 			if (item.name() == name) {
 				service.getDetails({placeId: item.placeId()}, details);
 			}
-		})
+		});
 		/** A call to the iwSettings function to setup the infoWindow then open it. */
 		iwSettings(name);
 	};
@@ -939,7 +937,7 @@ var ViewModel = function() {
 				if (item.name().toLowerCase().search(filter) > -1) {
 					searchResults.push(item);
 				}
-			})
+			});
 			/** The filter input field value is saved to local storage. */
 			saveData("", filter, 0);
 			/** Markers are placed for places in the searchResults array which now only contains
