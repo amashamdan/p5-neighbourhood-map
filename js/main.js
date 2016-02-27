@@ -363,9 +363,9 @@ function loadData() {
 	/** The map bounds are loaded. */
 	var tempBounds = JSON.parse(localStorage.lastBounds);
 	/** The southwest corner of the map's bounds is defined. */
-	var sw = new google.maps.LatLng(tempBounds.O.O, tempBounds.j.j);
+	var sw = new google.maps.LatLng(tempBounds.south, tempBounds.west);
 	/** The northeast corner of the map's bounds is defined. */
-	var ne = new google.maps.LatLng(tempBounds.O.j, tempBounds.j.O);
+	var ne = new google.maps.LatLng(tempBounds.north, tempBounds.east);
 	/** The zoom level is loaded. */
 	var zoom = Number(localStorage.lastZoom);
 	/** A new bounds object is declared. */
