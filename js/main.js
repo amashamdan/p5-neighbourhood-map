@@ -626,7 +626,7 @@ function times(city) {
 	showTimesErrorMessage(false);
 	/** AJAX resuest to NyTimes using the name of the current city. */
 	$.ajax({
-		url : "http://api.nytimes.com/svc/search/v2/articlesearch.json?q="+city+"&api-key=2bc73c1c7c519ec64cc7f2873b9e8744:16:72970449",
+		url : "http://api.nytimes.com/svc/search/v2/articlesearch.json?q="+city+"&api-key=f26bee20ee59033013b71b97a204fbc1:7:72970449",
 	    /** If the request succeeds, the results JSON is parsed. and the headline for each
 	    result item is pushed to the newsResults array which is used to display the list
 	    of the news articles using Knockout bindings. */
